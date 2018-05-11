@@ -1,0 +1,22 @@
+{
+  "name": "yuefu",
+  "version": "1.0.0",
+  "description": "a mp3 player for practice",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lwyj123/yuefu.git"
+  },
+  "author": "lwyj123",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lwyj123/yuefu/issues"
+  },
+  "homepage": "https://github.com/lwyj123/yuefu#readme"
+}
