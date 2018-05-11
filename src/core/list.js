@@ -1,6 +1,7 @@
 import tplListItem from "../template/list-item.art";
 import utils from "./utils";
 import smoothScroll from "smoothscroll";
+import Emitter from "./emitter";
 
 class List {
   constructor (player) {
@@ -32,13 +33,13 @@ class List {
   }
 
   show () {
-    this.player.events.trigger("listshow");
+    this.player.emitter.emit(Emitter.playerEvents.LIST_SHOW);
     this.player.template.list.classList.remove("aplayer-list-hide");
     this.player.template.listOl.scrollTop = this.index * 33;
   }
 
   hide () {
-    this.player.events.trigger("listhide");
+    this.player.emitter.emit(Emitter.playerEvents.LIST_HIDE);
     this.player.template.list.classList.add("aplayer-list-hide");
   }
 
@@ -52,7 +53,7 @@ class List {
   }
 
   add (audios) {
-    this.player.events.trigger("listadd", {
+    this.player.emitter.emit(Emitter.playerEvents.LIST_ADD, {
       audios: audios,
     });
 
@@ -98,7 +99,7 @@ class List {
   }
 
   remove (index) {
-    this.player.events.trigger("listremove", {
+    this.player.emitter.emiter(Emitter.playerEvents.LIST_REMOVE, {
       index: index,
     });
     if (this.audios[index]) {
@@ -137,7 +138,7 @@ class List {
   }
 
   switch (index) {
-    this.player.events.trigger("listswitch", {
+    this.player.emitter.emit(Emitter.playerEvents.LIST_SWITCH, {
       index: index,
     });
 
@@ -173,7 +174,7 @@ class List {
   }
 
   clear () {
-    this.player.events.trigger("listclear");
+    this.player.emiter.emit(Emitter.playerEvents.LIST_CLEAR);
     this.index = 0;
     this.player.container.classList.remove("aplayer-withlist");
     this.player.pause();

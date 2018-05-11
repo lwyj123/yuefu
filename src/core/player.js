@@ -2,6 +2,13 @@ import Emitter from "./emitter";
 import logger from "./logger";
 import utils from "./utils";
 import handleOption from "./handlerOption";
+import Lrc from "./lrc";
+import Icons from "./icons";
+import Controller from "./controller";
+import Timer from "./timer";
+import List from "./list";
+import Template from "./template"; // 全部删除
+import Storage from "./storage";
 
 // 多实例管理
 const instances = [];
@@ -78,7 +85,6 @@ class Player {
     }
     this.emitter = new Emitter();
     this.storage = new Storage(this);
-    this.bar = new Bar(this.template);
     this.controller = new Controller(this);
     this.timer = new Timer(this);
     this.list = new List(this);
@@ -112,21 +118,21 @@ class Player {
     this.volume(this.storage.get("volume"), true);
   }
   bindEvents() {
-    this.on("play", () => {
+    this.on(Emitter.audioEvents.PLAY, () => {
       if (this.paused) {
         this.setUIPlaying();
       }
     });
 
-    this.on("pause", () => {
+    this.on(Emitter.audioEvents.PAUSE, () => {
       if (!this.paused) {
         this.setUIPaused();
       }
     });
 
-    this.on("timeupdate", () => {
+    this.on(Emitter.audioEvents.TIME_UPDATE, () => {
       if (!this.disableTimeupdate) {
-        this.bar.set("played", this.audio.currentTime / this.duration, "width");
+        // this.bar.set("played", this.audio.currentTime / this.duration, "width");
         this.lrc && this.lrc.update();
         const currentTime = utils.secondToTime(this.audio.currentTime);
         if (this.template.ptime.innerHTML !== currentTime) {
@@ -136,7 +142,7 @@ class Player {
     });
 
     // show audio time: the metadata has loaded or changed
-    this.on("durationchange", () => {
+    this.on(Emitter.audioEvents.DURATION_CHANGE, () => {
       if (this.duration !== 1) {
         // compatibility: Android browsers will output 1 at first
         this.template.dtime.innerHTML = utils.secondToTime(this.duration);
@@ -144,17 +150,17 @@ class Player {
     });
 
     // show audio loaded bar: to inform interested parties of progress downloading the media
-    this.on("progress", () => {
-      const percentage = this.audio.buffered.length
-        ? this.audio.buffered.end(this.audio.buffered.length - 1) /
-          this.duration
-        : 0;
-      this.bar.set("loaded", percentage, "width");
+    this.on(Emitter.audioEvents.PROGRESS, () => {
+      // const percentage = this.audio.buffered.length
+      //   ? this.audio.buffered.end(this.audio.buffered.length - 1) /
+      //     this.duration
+      //   : 0;
+      // this.bar.set("loaded", percentage, "width");
     });
 
     // audio download error: an error occurs
     let skipTime;
-    this.on("error", () => {
+    this.on(Emitter.audioEvents.ERROR, () => {
       if (this.list.audios.length > 1) {
         this.notice(
           "An audio error has occurred, player will skip forward in 2 seconds."
@@ -174,7 +180,7 @@ class Player {
     });
 
     // multiple audio play
-    this.on("ended", () => {
+    this.on(Emitter.audioEvents.ENDED, () => {
       if (this.options.loop === "none") {
         if (this.options.order === "list") {
           if (this.list.index < this.list.audios.length - 1) {
@@ -206,40 +212,18 @@ class Player {
     });
   }
   setAudio (audio) {
-    if (this.hls) {
-      this.hls.destroy();
-      this.hls = null;
-    }
     let type = audio.type;
     if (this.options.customAudioType && this.options.customAudioType[type]) {
       if (Object.prototype.toString.call(this.options.customAudioType[type]) === "[object Function]") {
         this.options.customAudioType[type](this.audio, audio, this);
       }
       else {
-        console.error(`Illegal customType: ${type}`);
+        logger.error(`Illegal customType: ${type}`);
       }
     }
     else {
       if (!type || type === "auto") {
-        if (/m3u8(#|\?|$)/i.exec(audio.url)) {
-          type = "hls";
-        }
-        else {
-          type = "normal";
-        }
-      }
-      if (type === "hls") {
-        if (Hls.isSupported()) {
-          this.hls = new Hls();
-          this.hls.loadSource(audio.url);
-          this.hls.attachMedia(this.audio);
-        }
-        else if (this.audio.canPlayType("application/x-mpegURL") || this.audio.canPlayType("application/vnd.apple.mpegURL")) {
-          this.audio.src = audio.url;
-        }
-        else {
-          this.notice("Error: HLS is not supported.");
-        }
+        type = "normal";
       }
       else if (type === "normal") {
         this.audio.src = audio.url;
@@ -269,7 +253,7 @@ class Player {
     time = Math.max(time, 0);
     time = Math.min(time, this.duration);
     this.audio.currentTime = time;
-    this.bar.set("played", time / this.duration, "width");
+    // this.bar.set("played", time / this.duration, "width");
     this.template.ptime.innerHTML = utils.secondToTime(time);
   }
 
@@ -306,7 +290,7 @@ class Player {
     const playPromise = this.audio.play();
     if (playPromise) {
       playPromise.catch((e) => {
-        console.warn(e);
+        logger.warn(e);
         if (e.name === "NotAllowedError") {
           this.setUIPaused();
         }
@@ -356,7 +340,7 @@ class Player {
     if (!isNaN(percentage)) {
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.bar.set("volume", percentage, "height");
+      // this.bar.set("volume", percentage, "height");
       if (!nostorage) {
         this.storage.set("volume", percentage);
       }

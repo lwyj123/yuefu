@@ -1,5 +1,5 @@
-let levels = ['error', 'warn', 'log', 'info'];
-let level = 'warn';
+let levels = ["error", "warn", "log", "info"];
+let level = "warn";
 
 function debug(method, ...args) {
   if (levels.indexOf(method) <= levels.indexOf(level)) {
@@ -15,7 +15,7 @@ function namespace(ns) {
 }
 
 debug.level = namespace.level = function(newLevel) {
-  level = newLevel; 
+  level = newLevel;
 };
 
 
