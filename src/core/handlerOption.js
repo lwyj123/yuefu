@@ -16,7 +16,11 @@ export default (options) => {
     listFolded: options.fixed,
     listMaxHeight: options.listmaxheight || "250px",
     audio: options.music || [],
-    storageName: "aplayer-setting"
+    storageName: "aplayer-setting",
+    // 新增模块机制
+    modules: {
+      testModule: {}
+    }
   };
   for (const defaultKey in defaultOption) {
     if (defaultOption.hasOwnProperty(defaultKey) && !options.hasOwnProperty(defaultKey)) {

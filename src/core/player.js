@@ -481,11 +481,16 @@ class Player {
   skipForward () {
     this.list.switch(this.nextIndex());
   }
+  addModule (moduleName, moduleClass, options = {}) {
+    return new moduleClass(this, options)
+  }
 
   static get version () {
     /* global APLAYER_VERSION */
     return APLAYER_VERSION;
   }
 }
+
+Player.imports = {}
 
 export default Player;

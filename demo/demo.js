@@ -14,3 +14,11 @@ const ap1 = new Yuefu({
     theme: "#ebd0c2"
   }]
 });
+
+class Test {
+  constructor(player, options) {
+    console.log('player: ', player)
+  }
+}
+
+ap1.addModule('test', Test)
