@@ -108,10 +108,9 @@ class Player {
     this.audio = document.createElement("audio");
     this.audio.preload = this.options.preload;
 
-    // TODO 用of循环
-    for (let i = 0; i < Emitter.audioEvents.length; i++) {
-      this.audio.addEventListener(Emitter.audioEvents[i], e => {
-        this.emitter.emit(Emitter.audioEvents[i], e);
+    for(const event of Emitter.audioEvents) {
+      this.audio.addEventListener(event, e => {
+        this.emitter.emit(event, e);
       });
     }
 
