@@ -23,6 +23,7 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-debugger": "warning"
     }
 };

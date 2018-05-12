@@ -11,7 +11,7 @@ module.exports = {
   devtool: "cheap-module-source-map",
 
   entry: {
-    "yuefu": "./src/index.js"
+    "Yuefu": "./src/index.js"
   },
 
   output: {

@@ -1,4 +1,5 @@
-const ap1 = new yuefu({
+Yuefu.debug('warn')
+const ap1 = new Yuefu({
   element: document.getElementById("player1"),
   mini: false,
   autoplay: false,
@@ -6,10 +7,10 @@ const ap1 = new yuefu({
   mutex: true,
   preload: "metadata",
   audio: [{
-    name: "光るなら",
+    name: "peace sign",
     artist: "Goose house",
-    url: "https://moeplayer.b0.upaiyun.com/aplayer/hikarunara.mp3",
-    cover: "https://moeplayer.b0.upaiyun.com/aplayer/hikarunara.jpg",
+    url: "http://lwio.me/api/storeroom/1526123245516.mp3",
+    cover: "",
     theme: "#ebd0c2"
   }]
 });

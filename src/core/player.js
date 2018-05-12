@@ -21,11 +21,11 @@ class Player {
     logger.level(limit);
   }
   constructor(options) {
+    // merge设置
     this.options = handleOption(options);
     this.container = this.options.container;
     this.paused = true;
-    this.playedPromise = Promise.resolve();
-    this.mode = "normal";
+    this.mode = "normal"; // 展示层的应该直接抽离出来
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
@@ -108,14 +108,20 @@ class Player {
     this.audio = document.createElement("audio");
     this.audio.preload = this.options.preload;
 
-    for(const event of Emitter.audioEvents) {
-      this.audio.addEventListener(event, e => {
-        this.emitter.emit(event, e);
+    for(const eventSymbol in Emitter.audioEvents) {
+      this.audio.addEventListener(Emitter.audioEvents[eventSymbol], e => {
+        this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
     }
 
     this.volume(this.storage.get("volume"), true);
   }
+
+  /**
+   * TODO: 大量的视图层的内容，需要抽离
+   *
+   * @memberof Player
+   */
   bindEvents() {
     this.on(Emitter.audioEvents.PLAY, () => {
       if (this.paused) {
@@ -138,23 +144,6 @@ class Player {
           this.template.ptime.innerHTML = currentTime;
         }
       }
-    });
-
-    // show audio time: the metadata has loaded or changed
-    this.on(Emitter.audioEvents.DURATION_CHANGE, () => {
-      if (this.duration !== 1) {
-        // compatibility: Android browsers will output 1 at first
-        this.template.dtime.innerHTML = utils.secondToTime(this.duration);
-      }
-    });
-
-    // show audio loaded bar: to inform interested parties of progress downloading the media
-    this.on(Emitter.audioEvents.PROGRESS, () => {
-      // const percentage = this.audio.buffered.length
-      //   ? this.audio.buffered.end(this.audio.buffered.length - 1) /
-      //     this.duration
-      //   : 0;
-      // this.bar.set("loaded", percentage, "width");
     });
 
     // audio download error: an error occurs
@@ -419,6 +408,14 @@ class Player {
     }
   }
 
+  /**
+   * TODO: 使用Module的方式实现，重构planning
+   *
+   * @param {any} text
+   * @param {number} [time=2000]
+   * @param {number} [opacity=0.8]
+   * @memberof Player
+   */
   notice (text, time = 2000, opacity = 0.8) {
     this.template.notice.innerHTML = text;
     this.template.notice.style.opacity = opacity;
@@ -436,6 +433,7 @@ class Player {
     }
   }
 
+  // TODO: 拆到
   prevIndex () {
     if (this.list.audios.length > 1) {
       if (this.options.order === "list") {
