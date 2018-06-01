@@ -11,12 +11,13 @@ module.exports = {
   devtool: "cheap-module-source-map",
 
   entry: {
-    "Yuefu": "./src/index.js"
+    "yuefu.js": "./src/index.js",
+    "yuefu.core": "./src/assets/core.scss"
   },
 
   output: {
     path: path.resolve(__dirname, "..", "dist"),
-    filename: "[name].js",
+    filename: "[name]",
     library: "[name]",
     libraryTarget: "umd",
     libraryExport: "default",
