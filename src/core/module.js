@@ -3,7 +3,11 @@ class Module {
     this.player = player
     this.options = options
   }
+  static get name() {
+    return 'undefinedModule'
+  }
 }
 Module.DEFAULTS = {}
+// Module.name = 'undefinedModule'
 
 export default Module

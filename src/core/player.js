@@ -5,6 +5,7 @@ import handleOption from "./handlerOption";
 import Lrc from "./lrc";
 import Icons from "./icons";
 import Controller from "./controller";
+import NewControllerModule from './modules/controllerModule'
 import Timer from "./timer";
 import List from "./list";
 import Template from "./template"; // 全部删除
@@ -26,6 +27,7 @@ class Player {
     this.container = this.options.container;
     this.paused = true;
     this.mode = "normal"; // 展示层的应该直接抽离出来
+    this.modules = {};
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
@@ -104,6 +106,17 @@ class Player {
 
     instances.push(this);
   }
+
+
+  /**
+   * 用于暴露基础内容给外界，比如各种Module
+   *
+   * @memberof Player
+   */
+  static import(name) {
+    return Player.imports[name]
+  }
+
   initAudio() {
     this.audio = document.createElement("audio");
     this.audio.preload = this.options.preload;
@@ -481,8 +494,9 @@ class Player {
   skipForward () {
     this.list.switch(this.nextIndex());
   }
-  addModule (moduleName, moduleClass, options = {}) {
-    return new moduleClass(this, options)
+  addModule (moduleClass, options = {}) {
+    this.modules[moduleClass.name] = new moduleClass(this, options)
+    return this.modules[moduleClass.name]
   }
 
   static get version () {
@@ -491,6 +505,8 @@ class Player {
   }
 }
 
-Player.imports = {}
+Player.imports = {
+  'controller': NewControllerModule
+}
 
 export default Player;

@@ -19,6 +19,17 @@ class Test {
   constructor(player, options) {
     console.log('player: ', player)
   }
+  static get name() {
+    return 'test'
+  }
 }
 
-ap1.addModule('test', Test)
+ap1.addModule(Test)
+ap1.addModule(Yuefu.import('controller'), {
+  controllers: [{
+    name: 'play',
+    handler: (player) => {
+      player.play()
+    }
+  }]
+})
