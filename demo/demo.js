@@ -39,5 +39,13 @@ ap1.addModule(Yuefu.import('controller'), {
     handler: (player) => {
       player.play()
     }
+  }, {
+    name: 'pause',
+    // 这里tag和HTML需不需要合并？tag有必要么
+    tag: 'button',
+    innerHTML: '暂停',
+    handler: (player) => {
+      player.pause()
+    }
   }]
 })
