@@ -167,9 +167,9 @@ class List {
       this.player.lrc && this.player.lrc.update(0);
 
       // set duration time
-      if (this.player.duration !== 1) {           // compatibility: Android browsers will output 1 at first
-        this.player.template.dtime.innerHTML = utils.secondToTime(this.player.duration);
-      }
+      // if (this.player.duration !== 1) {           // compatibility: Android browsers will output 1 at first
+      //   this.player.template.dtime.innerHTML = utils.secondToTime(this.player.duration);
+      // }
     }
   }
 
@@ -187,7 +187,7 @@ class List {
     this.player.template.title.innerHTML = "No audio";
     this.player.template.author.innerHTML = "";
     this.player.bar.set("loaded", 0, "width");
-    this.player.template.dtime.innerHTML = utils.secondToTime(0);
+    // this.player.template.dtime.innerHTML = utils.secondToTime(0);
   }
 }
 

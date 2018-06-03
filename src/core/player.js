@@ -4,8 +4,8 @@ import utils from "./utils";
 import handleOption from "./handlerOption";
 import Lrc from "./lrc";
 import Icons from "./icons";
-import Controller from "./controller";
-import NewControllerModule from './modules/ControllerModule'
+// import Controller from "./controller";
+import ControllerModule from './modules/ControllerModule'
 import Timer from "./timer";
 import List from "./list";
 import Template from "./template"; // 全部删除
@@ -88,7 +88,7 @@ class Player {
     }
     this.emitter = new Emitter();
     this.storage = new Storage(this);
-    this.controller = new Controller(this);
+    // this.controller = new Controller(this);
     this.timer = new Timer(this);
     this.list = new List(this);
 
@@ -124,11 +124,12 @@ class Player {
 
     for(const eventSymbol in Emitter.audioEvents) {
       this.audio.addEventListener(Emitter.audioEvents[eventSymbol], e => {
+        console.log(Emitter.audioEvents[eventSymbol])
         this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
     }
 
-    this.volume(this.storage.get("volume"), true);
+    // this.volume(this.storage.get("volume"), true);
   }
 
   /**
@@ -146,17 +147,6 @@ class Player {
     this.on(Emitter.audioEvents.PAUSE, () => {
       if (!this.paused) {
         this.setUIPaused();
-      }
-    });
-
-    this.on(Emitter.audioEvents.TIME_UPDATE, () => {
-      if (!this.disableTimeupdate) {
-        // this.bar.set("played", this.audio.currentTime / this.duration, "width");
-        this.lrc && this.lrc.update();
-        const currentTime = utils.secondToTime(this.audio.currentTime);
-        if (this.template.ptime.innerHTML !== currentTime) {
-          this.template.ptime.innerHTML = currentTime;
-        }
       }
     });
 
@@ -245,18 +235,19 @@ class Player {
     this.template.listCurs[index] && (this.template.listCurs[index].style.backgroundColor = color);
     if (index === this.list.index) {
       this.template.pic.style.backgroundColor = color;
-      this.template.played.style.background = color;
-      this.template.thumb.style.background = color;
-      this.template.volume.style.background = color;
+      // this.template.played.style.background = color;
+      // this.template.thumb.style.background = color;
+      // this.template.volume.style.background = color;
     }
   }
 
   seek (time) {
     time = Math.max(time, 0);
     time = Math.min(time, this.duration);
+
     this.audio.currentTime = time;
     // this.bar.set("played", time / this.duration, "width");
-    this.template.ptime.innerHTML = utils.secondToTime(time);
+    // this.template.ptime.innerHTML = utils.secondToTime(time);
   }
 
   get duration () {
@@ -272,7 +263,7 @@ class Player {
       setTimeout(() => {
         this.template.button.innerHTML = Icons.pause;
       }, 100);
-      this.template.skipPlayButton.innerHTML = Icons.pause;
+      // this.template.skipPlayButton.innerHTML = Icons.pause;
     }
 
     this.timer.enable("loading");
@@ -508,7 +499,7 @@ class Player {
 
 Player.imports = {
   'emitter': Emitter,
-  'controller': NewControllerModule,
+  'controller': ControllerModule,
   'progress': ProgressModule,
 }
 

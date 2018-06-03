@@ -38,6 +38,8 @@ class ProgressModule extends Module {
     this.playedTimeNode = this.player.container.querySelector('.aplayer-ptime')
     this.musicTimeNode = this.player.container.querySelector('.aplayer-dtime')
 
+    this.bindProgressEvent()
+
     const self = this;
     this.player.on(Emitter.audioEvents.TIME_UPDATE, () => {
       if (!self.player.disableTimeupdate) {
@@ -45,15 +47,23 @@ class ProgressModule extends Module {
         // this.lrc && this.lrc.update();
         const currentTime = utils.secondToTime(self.player.audio.currentTime);
         if (self.playedTimeNode.innerHTML !== currentTime) {
-          self.updateTime(currentTime);
+          self.updatePlayedTime(currentTime);
         }
+      }
+    });
+    this.player.on(Emitter.audioEvents.PLAY, () => {
+      if (!self.player.disableTimeupdate) {
+        const durationTime = utils.secondToTime(self.player.audio.duration);
+        self.updateMusicTime(durationTime);
       }
     });
   }
 
-  initProgress() {
+  bindProgressEvent() {
+    const self = this;
+    const progressWrap = this.player.container.querySelector('.aplayer-bar-wrap')
     const thumbMove = (e) => {
-      let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
+      let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(progressWrap)) / progressWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
       // TODO: 设置模块状态方便模块交互？
@@ -61,18 +71,20 @@ class ProgressModule extends Module {
       // this.player.bar.set("played", percentage, "width");
       // TODO: 考虑通过事件，各模块不耦合
       // this.player.lrc && this.player.lrc.update(percentage * this.player.duration);
-      this.playedTimeNode.innerHTML = utils.secondToTime(percentage * this.player.duration);
+      this.playedTimeNode.innerHTML = utils.secondToTime(percentage * self.player.duration);
     };
 
     const thumbUp = (e) => {
       document.removeEventListener(utils.nameMap.dragEnd, thumbUp);
       document.removeEventListener(utils.nameMap.dragMove, thumbMove);
-      let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(this.player.template.barWrap)) / this.player.template.barWrap.clientWidth;
+
+      let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(progressWrap)) / progressWrap.clientWidth;
+
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      this.player.bar.set("played", percentage, "width");
-      this.player.seek(this.player.bar.get("played", "width") * this.player.duration);
-      this.player.disableTimeupdate = false;
+      self.player.seek(percentage * self.player.duration);
+      self.player.disableTimeupdate = false;
+      console.log(`[progress] seek time into ${percentage * self.player.duration}`)
     };
 
     this.player.container.querySelector('.aplayer-bar-wrap').addEventListener(utils.nameMap.dragStart, () => {
@@ -81,8 +93,11 @@ class ProgressModule extends Module {
       document.addEventListener(utils.nameMap.dragEnd, thumbUp);
     });
   }
-  updateTime(time) {
+  updatePlayedTime(time) {
     this.playedTimeNode.innerHTML = time;
+  }
+  updateMusicTime(time) {
+    this.musicTimeNode.innerHTML = time;
   }
 }
 
