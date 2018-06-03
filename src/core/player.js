@@ -5,11 +5,12 @@ import handleOption from "./handlerOption";
 import Lrc from "./lrc";
 import Icons from "./icons";
 import Controller from "./controller";
-import NewControllerModule from './modules/controllerModule'
+import NewControllerModule from './modules/ControllerModule'
 import Timer from "./timer";
 import List from "./list";
 import Template from "./template"; // 全部删除
 import Storage from "./storage";
+import ProgressModule from "./modules/ProgressModule";
 
 // 多实例管理
 const instances = [];
@@ -506,7 +507,9 @@ class Player {
 }
 
 Player.imports = {
-  'controller': NewControllerModule
+  'emitter': Emitter,
+  'controller': NewControllerModule,
+  'progress': ProgressModule,
 }
 
 export default Player;

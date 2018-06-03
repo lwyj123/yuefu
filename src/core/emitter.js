@@ -36,7 +36,7 @@ Emitter.audioEvents = {
   SEEKING              : "seeking",
   STALLED              : "stalled",
   SUSPEND              : "suspend",
-  TIME_UPDATE          : "time-update",
+  TIME_UPDATE          : "timeupdate",
   VOLUME_CHANGE        : "volume-change",
   WAITING              : "waiting",
 };

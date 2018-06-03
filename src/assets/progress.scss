@@ -1,0 +1,98 @@
+.aplayer-bar-wrap {
+    margin: 0 5px;
+    padding: 4px 0;
+    cursor: pointer !important;
+    flex: 1;
+
+    &:hover {
+        .aplayer-bar .aplayer-played .aplayer-thumb {
+            transform: scale(1);
+        }
+    }
+
+    .aplayer-bar {
+        position: relative;
+        height: 2px;
+        width: 100%;
+        background: #cdcdcd;
+
+        .aplayer-loaded {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: #aaa;
+            height: 2px;
+            transition: all 0.5s ease;
+        }
+
+        .aplayer-played {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            height: 2px;
+
+            .aplayer-thumb {
+                position: absolute;
+                top: 0;
+                right: 5px;
+                margin-top: -4px;
+                margin-right: -10px;
+                height: 10px;
+                width: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all .3s ease-in-out;
+                transform: scale(0);
+            }
+        }
+    }
+}
+
+.aplayer-time {
+    position: relative;
+    right: 0;
+    bottom: 4px;
+    height: 17px;
+    color: #999;
+    font-size: 11px;
+    padding-left: 7px;
+
+    .aplayer-time-inner {
+        vertical-align: middle;
+    }
+
+    .aplayer-icon {
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        path {
+            fill: #666;
+        }
+
+        &.aplayer-icon-loop {
+            margin-right: 2px;
+        }
+
+        &:hover {
+            path {
+                fill: #000;
+            }
+        }
+
+        &.aplayer-icon-menu {
+            display: none;
+        }
+    }
+
+    &.aplayer-time-narrow {
+        .aplayer-icon-mode {
+            display: none;
+        }
+
+        .aplayer-icon-menu {
+            display: none;
+        }
+    }
+}

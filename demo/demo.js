@@ -25,9 +25,17 @@ class Test {
 }
 
 ap1.addModule(Test)
+
+ap1.addModule(Yuefu.import('progress'), {
+  // timeFormat: 'MM:ss'
+})
+
 ap1.addModule(Yuefu.import('controller'), {
   controllers: [{
     name: 'play',
+    // 这里tag和HTML需不需要合并？tag有必要么
+    tag: 'button',
+    innerHTML: '播放',
     handler: (player) => {
       player.play()
     }
