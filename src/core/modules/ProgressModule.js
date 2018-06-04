@@ -35,6 +35,7 @@ class ProgressModule extends Module {
     </div>
     `
     this.player.container.appendChild(progress);
+    this.playedProgressNode = this.player.container.querySelector('.aplayer-played')
     this.playedTimeNode = this.player.container.querySelector('.aplayer-ptime')
     this.musicTimeNode = this.player.container.querySelector('.aplayer-dtime')
 
@@ -95,6 +96,7 @@ class ProgressModule extends Module {
   }
   updatePlayedTime(time) {
     this.playedTimeNode.innerHTML = time;
+    this.playedProgressNode.style.width = `${(this.player.audio.currentTime / this.player.duration * 100).toFixed(0)}%`
   }
   updateMusicTime(time) {
     this.musicTimeNode.innerHTML = time;

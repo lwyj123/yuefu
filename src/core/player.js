@@ -301,7 +301,7 @@ class Player {
       setTimeout(() => {
         this.template.button.innerHTML = Icons.play;
       }, 100);
-      this.template.skipPlayButton.innerHTML = Icons.play;
+      // this.template.skipPlayButton.innerHTML = Icons.play;
     }
 
     this.container.classList.remove("aplayer-loading");
