@@ -22,24 +22,7 @@ npm install yuefu --save
 
 ```js
 const yuefu = new Yuefu({
-    container: document.getElementById('yuefu-demo'),
-    audio: [{
-        name: 'name',
-        artist: 'artist',
-        url: 'url.mp3',
-        cover: 'cover.jpg'
-    }]
-});
-
-const yuefu = new Yuefu({
-  element: document.getElementById("player1"),
-  audio: [{
-    name: "peace sign",
-    artist: "Goose house",
-    url: "http://lwio.me/api/storeroom/1526123245516.mp3",
-    cover: "",
-    theme: "#ebd0c2"
-  }]
+  element: document.getElementById("yuefu-demo"),
 });
 
 // load default progress module
