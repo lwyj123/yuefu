@@ -34,7 +34,7 @@ class Player {
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
     this.container.classList.add("aplayer");
-    if (this.options.lrcType && !this.options.fixed) {
+    if (this.options.lrcType) {
       this.container.classList.add("aplayer-withlrc");
     }
     if (this.options.audio.length > 1) {
@@ -67,11 +67,6 @@ class Player {
       randomOrder: this.randomOrder
     });
 
-    if (this.options.fixed) {
-      this.container.classList.add("aplayer-fixed");
-      this.template.body.style.width =
-        this.template.body.offsetWidth - 18 + "px";
-    }
     if (this.options.mini) {
       this.setMode("mini");
       this.template.info.style.display = "block";
@@ -258,11 +253,11 @@ class Player {
   setUIPlaying () {
     if (this.paused) {
       this.paused = false;
-      this.template.button.classList.remove("aplayer-play");
-      this.template.button.classList.add("aplayer-pause");
-      this.template.button.innerHTML = "";
+      // this.template.button.classList.remove("aplayer-play");
+      // this.template.button.classList.add("aplayer-pause");
+      // this.template.button.innerHTML = "";
       setTimeout(() => {
-        this.template.button.innerHTML = Icons.pause;
+        // this.template.button.innerHTML = Icons.pause;
       }, 100);
       // this.template.skipPlayButton.innerHTML = Icons.pause;
     }

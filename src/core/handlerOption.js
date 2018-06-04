@@ -4,7 +4,6 @@ export default (options) => {
   const defaultOption = {
     container: options.element || document.getElementsByClassName("aplayer")[0],
     mini: options.narrow || options.fixed || false,
-    fixed: false,
     autoplay: false,
     mutex: true,
     lrcType: options.showlrc || options.lrc || 0,
