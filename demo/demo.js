@@ -29,6 +29,23 @@ ap1.addModule(Test)
 ap1.addModule(Yuefu.import('progress'), {
   // timeFormat: 'MM:ss'
 })
+ap1.addModule(Yuefu.import('list'), {
+  audios: [{
+    name: "peace sign",
+    artist: "Goose house",
+    type: "normal",
+    url: "http://lwio.me/api/storeroom/1526123245516.mp3",
+    cover: "",
+    theme: "#ebd0c2"
+  }, {
+    name: "胖子非野子",
+    artist: "JAKI",
+    type: "normal",
+    url: "http://lwio.me/api/storeroom/1528112620919.mp3",
+    cover: "",
+    theme: "#ba31ca"
+  }]
+})
 
 ap1.addModule(Yuefu.import('controller'), {
   controllers: [{

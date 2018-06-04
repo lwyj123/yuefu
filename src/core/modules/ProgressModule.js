@@ -52,7 +52,7 @@ class ProgressModule extends Module {
         }
       }
     });
-    this.player.on(Emitter.audioEvents.PLAY, () => {
+    this.player.on(Emitter.audioEvents.PLAYING, () => {
       if (!self.player.disableTimeupdate) {
         const durationTime = utils.secondToTime(self.player.audio.duration);
         self.updateMusicTime(durationTime);

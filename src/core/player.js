@@ -7,10 +7,11 @@ import Icons from "./icons";
 // import Controller from "./controller";
 import ControllerModule from './modules/ControllerModule'
 import Timer from "./timer";
-import List from "./list";
+// import List from "./list";
 import Template from "./template"; // 全部删除
 import Storage from "./storage";
 import ProgressModule from "./modules/ProgressModule";
+import ListModule from "./modules/ListModule";
 
 // 多实例管理
 const instances = [];
@@ -90,15 +91,15 @@ class Player {
     this.storage = new Storage(this);
     // this.controller = new Controller(this);
     this.timer = new Timer(this);
-    this.list = new List(this);
+    // this.list = new List(this);
 
     this.initAudio();
     this.bindEvents();
-    if (this.options.order === "random") {
-      this.list.switch(this.randomOrder[0]);
-    } else {
-      this.list.switch(0);
-    }
+    // if (this.options.order === "random") {
+    //   this.list.switch(this.randomOrder[0]);
+    // } else {
+    //   this.list.switch(0);
+    // }
 
     // autoplay
     if (this.options.autoplay) {
@@ -152,56 +153,56 @@ class Player {
 
     // audio download error: an error occurs
     let skipTime;
-    this.on(Emitter.audioEvents.ERROR, () => {
-      if (this.list.audios.length > 1) {
-        this.notice(
-          "An audio error has occurred, player will skip forward in 2 seconds."
-        );
-        skipTime = setTimeout(() => {
-          this.skipForward();
-          if (!this.paused) {
-            this.play();
-          }
-        }, 2000);
-      } else if (this.list.audios.length === 1) {
-        this.notice("An audio error has occurred.");
-      }
-    });
+    // this.on(Emitter.audioEvents.ERROR, () => {
+    //   if (this.list.audios.length > 1) {
+    //     this.notice(
+    //       "An audio error has occurred, player will skip forward in 2 seconds."
+    //     );
+    //     skipTime = setTimeout(() => {
+    //       this.skipForward();
+    //       if (!this.paused) {
+    //         this.play();
+    //       }
+    //     }, 2000);
+    //   } else if (this.list.audios.length === 1) {
+    //     this.notice("An audio error has occurred.");
+    //   }
+    // });
     this.emitter.on(Emitter.playerEvents.LIST_SWITCH, () => {
       skipTime && clearTimeout(skipTime);
     });
 
     // multiple audio play
-    this.on(Emitter.audioEvents.ENDED, () => {
-      if (this.options.loop === "none") {
-        if (this.options.order === "list") {
-          if (this.list.index < this.list.audios.length - 1) {
-            this.list.switch((this.list.index + 1) % this.list.audios.length);
-            this.play();
-          } else {
-            this.list.switch((this.list.index + 1) % this.list.audios.length);
-            this.pause();
-          }
-        } else if (this.options.order === "random") {
-          if (
-            this.randomOrder.indexOf(this.list.index) <
-            this.randomOrder.length - 1
-          ) {
-            this.list.switch(this.nextIndex());
-            this.play();
-          } else {
-            this.list.switch(this.nextIndex());
-            this.pause();
-          }
-        }
-      } else if (this.options.loop === "one") {
-        this.list.switch(this.list.index);
-        this.play();
-      } else if (this.options.loop === "all") {
-        this.skipForward();
-        this.play();
-      }
-    });
+    // this.on(Emitter.audioEvents.ENDED, () => {
+    //   if (this.options.loop === "none") {
+    //     if (this.options.order === "list") {
+    //       if (this.list.index < this.list.audios.length - 1) {
+    //         this.list.switch((this.list.index + 1) % this.list.audios.length);
+    //         this.play();
+    //       } else {
+    //         this.list.switch((this.list.index + 1) % this.list.audios.length);
+    //         this.pause();
+    //       }
+    //     } else if (this.options.order === "random") {
+    //       if (
+    //         this.randomOrder.indexOf(this.list.index) <
+    //         this.randomOrder.length - 1
+    //       ) {
+    //         this.list.switch(this.nextIndex());
+    //         this.play();
+    //       } else {
+    //         this.list.switch(this.nextIndex());
+    //         this.pause();
+    //       }
+    //     }
+    //   } else if (this.options.loop === "one") {
+    //     this.list.switch(this.list.index);
+    //     this.play();
+    //   } else if (this.options.loop === "all") {
+    //     this.skipForward();
+    //     this.play();
+    //   }
+    // });
   }
   setAudio (audio) {
     let type = audio.type;
@@ -501,6 +502,7 @@ Player.imports = {
   'emitter': Emitter,
   'controller': ControllerModule,
   'progress': ProgressModule,
+  'list': ListModule,
 }
 
 export default Player;
