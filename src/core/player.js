@@ -489,7 +489,7 @@ class Player {
 
   static get version () {
     /* global APLAYER_VERSION */
-    return APLAYER_VERSION;
+    return YUEFU_VERSION;
   }
 }
 

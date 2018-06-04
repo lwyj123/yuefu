@@ -1,5 +1,5 @@
 Yuefu.debug('warn')
-const ap1 = new Yuefu({
+const yuefu = new Yuefu({
   element: document.getElementById("player1"),
   mini: false,
   autoplay: false,
@@ -24,12 +24,12 @@ class Test {
   }
 }
 
-ap1.addModule(Test)
+yuefu.addModule(Test)
 
-ap1.addModule(Yuefu.import('progress'), {
+yuefu.addModule(Yuefu.import('progress'), {
   // timeFormat: 'MM:ss'
 })
-ap1.addModule(Yuefu.import('list'), {
+yuefu.addModule(Yuefu.import('list'), {
   audios: [{
     name: "peace sign",
     artist: "Goose house",

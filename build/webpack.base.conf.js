@@ -110,7 +110,7 @@ module.exports = {
 
   plugins: [
     new webpack.DefinePlugin({
-      APLAYER_VERSION: `"${require("../package.json").version}"`,
+      YUEFU_VERSION: `"${require("../package.json").version}"`,
       GIT_HASH: JSON.stringify(gitRevisionPlugin.version())
     }),
     new MiniCssExtractPlugin({
