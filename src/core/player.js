@@ -2,7 +2,6 @@ import Emitter from "./emitter";
 import logger from "./logger";
 import utils from "./utils";
 import handleOption from "./handlerOption";
-import Lrc from "./lrc";
 import Icons from "./icons";
 // import Controller from "./controller";
 import ControllerModule from './modules/ControllerModule'
