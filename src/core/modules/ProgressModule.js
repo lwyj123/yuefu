@@ -46,7 +46,7 @@ class ProgressModule extends Module {
       if (!self.player.disableTimeupdate) {
         // this.bar.set("played", this.audio.currentTime / this.duration, "width");
         // this.lrc && this.lrc.update();
-        const currentTime = utils.secondToTime(self.player.audio.currentTime);
+        const currentTime = utils.secondToTime(self.player.audioDOM.currentTime);
         if (self.playedTimeNode.innerHTML !== currentTime) {
           self.updatePlayedTime(currentTime);
         }
@@ -54,7 +54,7 @@ class ProgressModule extends Module {
     });
     this.player.on(Emitter.audioEvents.PLAYING, () => {
       if (!self.player.disableTimeupdate) {
-        const durationTime = utils.secondToTime(self.player.audio.duration);
+        const durationTime = utils.secondToTime(self.player.audioDOM.duration);
         self.updateMusicTime(durationTime);
       }
     });
@@ -96,7 +96,7 @@ class ProgressModule extends Module {
   }
   updatePlayedTime(time) {
     this.playedTimeNode.innerHTML = time;
-    this.playedProgressNode.style.width = `${(this.player.audio.currentTime / this.player.duration * 100).toFixed(0)}%`
+    this.playedProgressNode.style.width = `${(this.player.audioDOM.currentTime / this.player.duration * 100).toFixed(0)}%`
   }
   updateMusicTime(time) {
     this.musicTimeNode.innerHTML = time;

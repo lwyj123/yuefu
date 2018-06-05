@@ -47,7 +47,7 @@ Emitter.playerEvents = {
   LIST_HIDE            : "list-hide",
   LIST_ADD             : "list-add",
   LIST_REMOVE          : "list-remove",
-  LIST_SWITCH          : "list-switch",
+  AUDIO_SWITCH         : "audio-switch",
   LIST_CLEAR           : "list-clear",
 
   NOTICE_SHOW          : "notice-show",

@@ -3,9 +3,6 @@ import Emitter from '../emitter'
 import utils from '../utils'
 import smoothScroll from "smoothscroll";
 
-export const EVENTS = {
-  LIST_SWITCH: 'list:switch'
-}
 
 class ListModule extends Module {
   constructor(player, options) {
@@ -61,10 +58,10 @@ class ListModule extends Module {
   }
 
   switch (index) {
-    this.player.emitter.emit(EVENTS.LIST_SWITCH, {
-      index: index,
-      audio: this.audios[index]
-    });
+    this.player.emitter.emit(Emitter.playerEvents.AUDIO_SWITCH,
+      index,
+      this.audios[index]
+    );
 
     if (typeof index !== "undefined" && this.audios[index]) {
       this.index = index;

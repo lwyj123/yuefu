@@ -138,7 +138,7 @@
 //   }
 
 //   switch (index) {
-//     this.player.emitter.emit(Emitter.playerEvents.LIST_SWITCH, {
+//     this.player.emitter.emit(Emitter.playerEvents.AUDIO_SWITCH, {
 //       index: index,
 //     });
 

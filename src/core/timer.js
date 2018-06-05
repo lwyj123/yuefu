@@ -32,16 +32,16 @@ class Timer {
     this.loadingChecker = setInterval(() => {
       if (this.enableloadingChecker) {
         // whether the audio is buffering
-        currentPlayPos = this.player.audio.currentTime;
+        currentPlayPos = this.player.audioDOM.currentTime;
         if (!bufferingDetected
                   && currentPlayPos === lastPlayPos
-                  && !this.player.audio.paused) {
+                  && !this.player.audioDOM.paused) {
           this.player.container.classList.add("aplayer-loading");
           bufferingDetected = true;
         }
         if (bufferingDetected
                   && currentPlayPos > lastPlayPos
-                  && !this.player.audio.paused) {
+                  && !this.player.audioDOM.paused) {
           this.player.container.classList.remove("aplayer-loading");
           bufferingDetected = false;
         }

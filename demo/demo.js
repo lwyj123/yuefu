@@ -24,14 +24,16 @@ yuefu.addModule(Yuefu.import('list'), {
     type: "normal",
     url: "http://lwio.me/api/storeroom/1526123245516.mp3",
     cover: "",
-    theme: "#ebd0c2"
+    theme: "#ebd0c2",
+    lrc: "http://localhost:8080/demo/demo.lrc",
   }, {
     name: "胖子非野子",
     artist: "JAKI",
     type: "normal",
     url: "http://lwio.me/api/storeroom/1528112620919.mp3",
     cover: "",
-    theme: "#ba31ca"
+    theme: "#ba31ca",
+    lrc: "http://localhost:8080/demo/demo2.lrc",
   }]
 })
 
@@ -53,4 +55,8 @@ yuefu.addModule(Yuefu.import('controller'), {
       player.pause()
     }
   }]
+})
+
+yuefu.addModule(Yuefu.import('lrc'), {
+
 })

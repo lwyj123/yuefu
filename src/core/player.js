@@ -12,6 +12,7 @@ import Template from "./template"; // 全部删除
 import Storage from "./storage";
 import ProgressModule from "./modules/ProgressModule";
 import ListModule from "./modules/ListModule";
+import LrcModule from "./modules/LrcModule";
 
 // 多实例管理
 const instances = [];
@@ -30,6 +31,8 @@ class Player {
     this.paused = true;
     this.mode = "normal"; // 展示层的应该直接抽离出来
     this.modules = {};
+    this.audio = null; // 当前播放的audio对象
+    this.audioDOM = null; // audio dom对象
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
@@ -75,13 +78,13 @@ class Player {
       this.template.time.classList.add("aplayer-time-narrow");
     }
 
-    if (this.options.lrcType) {
-      this.lrc = new Lrc({
-        container: this.template.lrc,
-        async: this.options.lrcType === 3,
-        player: this
-      });
-    }
+    // if (this.options.lrcType) {
+    //   this.lrc = new Lrc({
+    //     container: this.template.lrc,
+    //     async: this.options.lrcType === 3,
+    //     player: this
+    //   });
+    // }
     this.emitter = new Emitter();
     this.storage = new Storage(this);
     // this.controller = new Controller(this);
@@ -115,11 +118,11 @@ class Player {
   }
 
   initAudio() {
-    this.audio = document.createElement("audio");
-    this.audio.preload = this.options.preload;
+    this.audioDOM = document.createElement("audio");
+    this.audioDOM.preload = this.options.preload;
 
     for(const eventSymbol in Emitter.audioEvents) {
-      this.audio.addEventListener(Emitter.audioEvents[eventSymbol], e => {
+      this.audioDOM.addEventListener(Emitter.audioEvents[eventSymbol], e => {
         console.log(Emitter.audioEvents[eventSymbol])
         this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
@@ -163,7 +166,7 @@ class Player {
     //     this.notice("An audio error has occurred.");
     //   }
     // });
-    this.emitter.on(Emitter.playerEvents.LIST_SWITCH, () => {
+    this.emitter.on(Emitter.playerEvents.AUDIO_SWITCH, () => {
       skipTime && clearTimeout(skipTime);
     });
 
@@ -200,10 +203,11 @@ class Player {
     // });
   }
   setAudio (audio) {
+    this.audio = audio;
     let type = audio.type;
     if (this.options.customAudioType && this.options.customAudioType[type]) {
       if (Object.prototype.toString.call(this.options.customAudioType[type]) === "[object Function]") {
-        this.options.customAudioType[type](this.audio, audio, this);
+        this.options.customAudioType[type](this.audioDOM, audio, this);
       }
       else {
         logger.error(`Illegal customType: ${type}`);
@@ -214,13 +218,13 @@ class Player {
         type = "normal";
       }
       else if (type === "normal") {
-        this.audio.src = audio.url;
+        this.audioDOM.src = audio.url;
       }
     }
     this.seek(0);
 
     if (!this.paused) {
-      this.audio.play();
+      this.audioDOM.play();
     }
   }
 
@@ -241,13 +245,17 @@ class Player {
     time = Math.max(time, 0);
     time = Math.min(time, this.duration);
 
-    this.audio.currentTime = time;
+    this.audioDOM.currentTime = time;
     // this.bar.set("played", time / this.duration, "width");
     // this.template.ptime.innerHTML = utils.secondToTime(time);
   }
 
+  get currentAudio () {
+    return this.audio
+  }
+
   get duration () {
-    return isNaN(this.audio.duration) ? 0 : this.audio.duration;
+    return isNaN(this.audioDOM.duration) ? 0 : this.audioDOM.duration;
   }
 
   setUIPlaying () {
@@ -276,7 +284,7 @@ class Player {
   play () {
     this.setUIPlaying();
 
-    const playPromise = this.audio.play();
+    const playPromise = this.audioDOM.play();
     if (playPromise) {
       playPromise.catch((e) => {
         logger.warn(e);
@@ -306,7 +314,7 @@ class Player {
 
   pause () {
     this.setUIPaused();
-    this.audio.pause();
+    this.audioDOM.pause();
   }
 
   switchVolumeIcon () {
@@ -334,15 +342,15 @@ class Player {
         this.storage.set("volume", percentage);
       }
 
-      this.audio.volume = percentage;
-      if (this.audio.muted) {
-        this.audio.muted = false;
+      this.audioDOM.volume = percentage;
+      if (this.audioDOM.muted) {
+        this.audioDOM.muted = false;
       }
 
       this.switchVolumeIcon();
     }
 
-    return this.audio.muted ? 0 : this.audio.volume;
+    return this.audioDOM.muted ? 0 : this.audioDOM.volume;
   }
 
   /**
@@ -394,7 +402,7 @@ class Player {
     instances.splice(instances.indexOf(this), 1);
     this.pause();
     this.container.innerHTML = "";
-    this.audio.src = "";
+    this.audioDOM.src = "";
     this.timer.destroy();
     this.emitter.emit(Emitter.playerEvents.DESTORY);
   }
@@ -498,6 +506,7 @@ Player.imports = {
   'controller': ControllerModule,
   'progress': ProgressModule,
   'list': ListModule,
+  'lrc': LrcModule,
 }
 
 export default Player;
