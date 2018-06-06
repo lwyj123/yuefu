@@ -10,9 +10,7 @@
         }
         .container {
             max-width: 32rem;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 150px;
+            margin: 50px auto;
         }
         h1 {
             font-size: 54px;
@@ -43,15 +41,18 @@
             font-size: 18px;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="../dist/yuefu.core.css"></link>
-    <script src="../dist/yuefu.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/color-thief-don@2.0.2/src/color-thief.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="http://cdn.lwio.me/yuefu/1.0.0/yuefu.core.css"></link>
+    <script src="http://cdn.lwio.me/yuefu/1.0.0/yuefu.js"></script>
 </head>
 <body>
     <div class="container">
         <div id="player1"></div>
     </div>
-
+    <script>
+        // if (/mobile/i.test(window.navigator.userAgent)) {
+        //     new VConsole();
+        // }
+    </script>
     <script src="demo.js"></script>
 </body>
 </html>
