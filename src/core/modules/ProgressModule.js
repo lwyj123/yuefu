@@ -19,25 +19,25 @@ class ProgressModule extends Module {
     const progress = document.createElement('div');
     progress.classList.add('yuefu-progress')
     progress.innerHTML = `
-    <div class="aplayer-bar-wrap">
-        <div class="aplayer-bar">
-            <div class="aplayer-loaded" style="width: 0"></div>
-            <div class="aplayer-played" style="width: 0; background: rgba(235, 207, 194);">
-                <span class="aplayer-thumb" style="background: rgba(235, 207, 194);">
+    <div class="yuefu-bar-wrap">
+        <div class="yuefu-bar">
+            <div class="yuefu-loaded" style="width: 0"></div>
+            <div class="yuefu-played" style="width: 0; background: #444444;">
+                <span class="yuefu-thumb" style="background: #444444;">
                 </span>
             </div>
         </div>
     </div>
-    <div class="aplayer-time">
-        <span class="aplayer-time-inner">
-            <span class="aplayer-ptime">00:00</span> / <span class="aplayer-dtime">00:00</span>
+    <div class="yuefu-time">
+        <span class="yuefu-time-inner">
+            <span class="yuefu-ptime">00:00</span> / <span class="yuefu-dtime">00:00</span>
         </span>
     </div>
     `
     this.player.container.appendChild(progress);
-    this.playedProgressNode = this.player.container.querySelector('.aplayer-played')
-    this.playedTimeNode = this.player.container.querySelector('.aplayer-ptime')
-    this.musicTimeNode = this.player.container.querySelector('.aplayer-dtime')
+    this.playedProgressNode = this.player.container.querySelector('.yuefu-played')
+    this.playedTimeNode = this.player.container.querySelector('.yuefu-ptime')
+    this.musicTimeNode = this.player.container.querySelector('.yuefu-dtime')
 
     this.bindProgressEvent()
 
@@ -62,17 +62,13 @@ class ProgressModule extends Module {
 
   bindProgressEvent() {
     const self = this;
-    const progressWrap = this.player.container.querySelector('.aplayer-bar-wrap')
+    const progressWrap = this.player.container.querySelector('.yuefu-bar-wrap')
     const thumbMove = (e) => {
       let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(progressWrap)) / progressWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
-      // TODO: 设置模块状态方便模块交互？
-      // player里面存放的modules中修改？
-      // this.player.bar.set("played", percentage, "width");
-      // TODO: 考虑通过事件，各模块不耦合
-      // this.player.lrc && this.player.lrc.update(percentage * this.player.duration);
       this.playedTimeNode.innerHTML = utils.secondToTime(percentage * self.player.duration);
+      this.updatePlayedTime(utils.secondToTime(percentage * self.player.duration))
     };
 
     const thumbUp = (e) => {
@@ -88,7 +84,7 @@ class ProgressModule extends Module {
       console.log(`[progress] seek time into ${percentage * self.player.duration}`)
     };
 
-    this.player.container.querySelector('.aplayer-bar-wrap').addEventListener(utils.nameMap.dragStart, () => {
+    this.player.container.querySelector('.yuefu-bar-wrap').addEventListener(utils.nameMap.dragStart, () => {
       this.player.disableTimeupdate = true;
       document.addEventListener(utils.nameMap.dragMove, thumbMove);
       document.addEventListener(utils.nameMap.dragEnd, thumbUp);
@@ -96,7 +92,7 @@ class ProgressModule extends Module {
   }
   updatePlayedTime(time) {
     this.playedTimeNode.innerHTML = time;
-    this.playedProgressNode.style.width = `${(this.player.audioDOM.currentTime / this.player.duration * 100).toFixed(0)}%`
+    this.playedProgressNode.style.width = `${(utils.timeToSecond(time) / this.player.duration * 100).toFixed(0)}%`
   }
   updateMusicTime(time) {
     this.musicTimeNode.innerHTML = time;

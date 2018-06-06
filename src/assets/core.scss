@@ -1,9 +1,9 @@
 @import './progress.scss';
 @import './list.scss';
 @import './lrc.scss';
-$aplayer-height: 66px;
+$yuefu-height: 66px;
 $lrc-height: 30px;
-$aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
+$yuefu-height-lrc: $yuefu-height + $lrc-height - 6;
 
 .yuefu {
     background: #fff;
@@ -30,81 +30,59 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         }
     }
 
-    &.aplayer-withlist {
-        .aplayer-info {
+    &.yuefu-withlist {
+        .yuefu-info {
             border-bottom: 1px solid #e9e9e9;
         }
-        .aplayer-list {
+        .yuefu-list {
             display: block;
         }
-        .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon.aplayer-icon-menu {
+        .yuefu-info .yuefu-controller .yuefu-time .yuefu-icon.yuefu-icon-menu {
             display: inline;
         }
-        .aplayer-icon-order {
+        .yuefu-icon-order {
             display: inline;
         }
     }
 
-    &.aplayer-withlrc {
-        .aplayer-pic {
-            height: $aplayer-height-lrc;
-            width: $aplayer-height-lrc;
+    &.yuefu-narrow {
+        width: $yuefu-height;
+
+        .yuefu-info {
+            display: none;
         }
-        .aplayer-info {
-            margin-left: $aplayer-height-lrc;
-            height: $aplayer-height-lrc;
-            padding: 10px 7px 0 7px;
+        .yuefu-list {
+            display: none;
         }
-        .aplayer-lrc {
-            display: block;
+        .yuefu-pic,
+        .yuefu-body {
+            height: $yuefu-height;
+            width: $yuefu-height;
         }
     }
 
-    &.aplayer-narrow {
-        width: $aplayer-height;
-
-        .aplayer-info {
-            display: none;
-        }
-        .aplayer-list {
-            display: none;
-        }
-        .aplayer-pic,
-        .aplayer-body {
-            height: $aplayer-height;
-            width: $aplayer-height;
-        }
-    }
-
-
-    &.aplayer-mobile {
-        .aplayer-icon-volume-down {
+    &.yuefu-arrow {
+        .yuefu-icon-order,
+        .yuefu-icon-loop {
             display: none;
         }
     }
 
-    &.aplayer-arrow {
-        .aplayer-icon-order,
-        .aplayer-icon-loop {
-            display: none;
-        }
-    }
-
-    &.aplayer-loading {
-        .aplayer-info .aplayer-controller .aplayer-loading-icon {
+    &.yuefu-loading {
+        .yuefu-info .yuefu-controller .yuefu-loading-icon {
             display: block;
         }
 
-        .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played .aplayer-thumb {
+        .yuefu-info .yuefu-controller .yuefu-bar-wrap .yuefu-bar .yuefu-played .yuefu-thumb {
             transform: scale(1);
         }
     }
 
-    .aplayer-body {
+    .yuefu-body {
         position: relative;
     }
 
-    .aplayer-icon {
+    .yuefu-icon {
         width: 15px;
         height: 15px;
         border: none;
@@ -123,43 +101,43 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         }
     }
 
-    .aplayer-icon-order,
-    .aplayer-icon-back,
-    .aplayer-icon-play,
-    .aplayer-icon-forward,
-    .aplayer-icon-lrc {
+    .yuefu-icon-order,
+    .yuefu-icon-back,
+    .yuefu-icon-play,
+    .yuefu-icon-forward,
+    .yuefu-icon-lrc {
         display: none;
     }
 
-    .aplayer-icon-lrc-inactivity {
+    .yuefu-icon-lrc-inactivity {
         svg {
             opacity: 0.4;
         }
     }
 
-    .aplayer-icon-forward {
+    .yuefu-icon-forward {
         transform: rotate(180deg);
     }
 
-    .aplayer-lrc-content {
+    .yuefu-lrc-content {
         display: none;
     }
 
-    .aplayer-pic {
+    .yuefu-pic {
         position: relative;
         float: left;
-        height: $aplayer-height;
-        width: $aplayer-height;
+        height: $yuefu-height;
+        width: $yuefu-height;
         background-size: cover;
         background-position: center;
         transition: all 0.3s ease;
         cursor: pointer;
 
-        &:hover .aplayer-button {
+        &:hover .yuefu-button {
             opacity: 1;
         }
 
-        .aplayer-button {
+        .yuefu-button {
             position: absolute;
             border-radius: 50%;
             opacity: 0.8;
@@ -173,11 +151,11 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
             }
         }
 
-        .aplayer-hide {
+        .yuefu-hide {
             display: none;
         }
 
-        .aplayer-play {
+        .yuefu-play {
             width: 26px;
             height: 26px;
             border: 2px solid #fff;
@@ -193,7 +171,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
             }
         }
 
-        .aplayer-pause {
+        .yuefu-pause {
             width: 16px;
             height: 16px;
             border: 2px solid #fff;
@@ -209,13 +187,13 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
         }
     }
 
-    .aplayer-info {
-        margin-left: $aplayer-height;
+    .yuefu-info {
+        margin-left: $yuefu-height;
         padding: 14px 7px 0 10px;
-        height: $aplayer-height;
+        height: $yuefu-height;
         box-sizing: border-box;
 
-        .aplayer-music {
+        .yuefu-music {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -225,31 +203,31 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
             padding-bottom: 2px;
             height: 20px;
 
-            .aplayer-title {
+            .yuefu-title {
                 font-size: 14px;
             }
 
-            .aplayer-author {
+            .yuefu-author {
                 font-size: 12px;
                 color: #666;
             }
         }
 
-        .aplayer-controller {
+        .yuefu-controller {
             position: relative;
             display: flex;
 
-            .aplayer-volume-wrap {
+            .yuefu-volume-wrap {
                 position: relative;
                 display: inline-block;
                 margin-left: 3px;
                 cursor: pointer !important;
 
-                &:hover .aplayer-volume-bar-wrap {
+                &:hover .yuefu-volume-bar-wrap {
                     height: 40px;
                 }
 
-                .aplayer-volume-bar-wrap {
+                .yuefu-volume-bar-wrap {
                     position: absolute;
                     bottom: 15px;
                     right: -3px;
@@ -259,11 +237,11 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
                     overflow: hidden;
                     transition: all .2s ease-in-out;
 
-                    &.aplayer-volume-bar-wrap-active {
+                    &.yuefu-volume-bar-wrap-active {
                         height: 40px;
                     }
 
-                    .aplayer-volume-bar {
+                    .yuefu-volume-bar {
                         position: absolute;
                         bottom: 0;
                         right: 10px;
@@ -273,7 +251,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
                         border-radius: 2.5px;
                         overflow: hidden;
 
-                        .aplayer-volume {
+                        .yuefu-volume {
                             position: absolute;
                             bottom: 0;
                             right: 0;
@@ -284,7 +262,7 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
                 }
             }
 
-            .aplayer-loading-icon {
+            .yuefu-loading-icon {
                 display: none;
 
                 svg {
@@ -294,55 +272,9 @@ $aplayer-height-lrc: $aplayer-height + $lrc-height - 6;
             }
         }
     }
-
-    .aplayer-notice {
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 12px;
-        border-radius: 4px;
-        padding: 5px 10px;
-        transition: all .3s ease-in-out;
-        overflow: hidden;
-        color: #fff;
-        pointer-events: none;
-        background-color: #f4f4f5;
-        color: #909399;
-    }
-
-    .aplayer-miniswitcher {
-        display: none;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        height: 100%;
-        background: #e6e6e6;
-        width: 18px;
-        border-radius: 0 2px 2px 0;
-
-        .aplayer-icon {
-            height: 100%;
-            width: 100%;
-            transform: rotateY(180deg);
-            transition: all 0.3s ease;
-
-            path {
-                fill: #666;
-            }
-
-            &:hover {
-                path {
-                    fill: #000;
-                }
-            }
-        }
-    }
 }
 
-@keyframes aplayer-roll {
+@keyframes yuefu-roll {
     0%{left:0}
     100%{left: -100%}
 }

@@ -36,13 +36,13 @@ class Timer {
         if (!bufferingDetected
                   && currentPlayPos === lastPlayPos
                   && !this.player.audioDOM.paused) {
-          this.player.container.classList.add("aplayer-loading");
+          this.player.container.classList.add("yuefu-loading");
           bufferingDetected = true;
         }
         if (bufferingDetected
                   && currentPlayPos > lastPlayPos
                   && !this.player.audioDOM.paused) {
-          this.player.container.classList.remove("aplayer-loading");
+          this.player.container.classList.remove("yuefu-loading");
           bufferingDetected = false;
         }
         lastPlayPos = currentPlayPos;

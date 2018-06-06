@@ -1,22 +1,22 @@
-.aplayer-bar-wrap {
+.yuefu-bar-wrap {
     margin: 0 5px;
     padding: 4px 0;
     cursor: pointer !important;
     flex: 1;
 
     &:hover {
-        .aplayer-bar .aplayer-played .aplayer-thumb {
+        .yuefu-bar .yuefu-played .yuefu-thumb {
             transform: scale(1);
         }
     }
 
-    .aplayer-bar {
+    .yuefu-bar {
         position: relative;
         height: 2px;
         width: 100%;
         background: #cdcdcd;
 
-        .aplayer-loaded {
+        .yuefu-loaded {
             position: absolute;
             left: 0;
             top: 0;
@@ -26,14 +26,14 @@
             transition: all 0.5s ease;
         }
 
-        .aplayer-played {
+        .yuefu-played {
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
             height: 2px;
 
-            .aplayer-thumb {
+            .yuefu-thumb {
                 position: absolute;
                 top: 0;
                 right: 5px;
@@ -50,7 +50,7 @@
     }
 }
 
-.aplayer-time {
+.yuefu-time {
     position: relative;
     right: 0;
     bottom: 4px;
@@ -59,11 +59,11 @@
     font-size: 11px;
     padding-left: 7px;
 
-    .aplayer-time-inner {
+    .yuefu-time-inner {
         vertical-align: middle;
     }
 
-    .aplayer-icon {
+    .yuefu-icon {
         cursor: pointer;
         transition: all 0.2s ease;
 
@@ -71,7 +71,7 @@
             fill: #666;
         }
 
-        &.aplayer-icon-loop {
+        &.yuefu-icon-loop {
             margin-right: 2px;
         }
 
@@ -81,17 +81,17 @@
             }
         }
 
-        &.aplayer-icon-menu {
+        &.yuefu-icon-menu {
             display: none;
         }
     }
 
-    &.aplayer-time-narrow {
-        .aplayer-icon-mode {
+    &.yuefu-time-narrow {
+        .yuefu-icon-mode {
             display: none;
         }
 
-        .aplayer-icon-menu {
+        .yuefu-icon-menu {
             display: none;
         }
     }

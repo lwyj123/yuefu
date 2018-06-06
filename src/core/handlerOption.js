@@ -2,20 +2,14 @@ export default (options) => {
 
   // default options
   const defaultOption = {
-    container: options.element || document.getElementsByClassName("aplayer")[0],
+    container: options.element || document.getElementsByClassName("yuefu")[0],
     mini: options.narrow || options.fixed || false,
     autoplay: false,
     mutex: true,
     lrcType: options.showlrc || options.lrc || 0,
     preload: "auto",
-    theme: "#b7daff",
-    loop: "all",
-    order: "list",
     volume: 0.7,
-    listFolded: options.fixed,
-    listMaxHeight: options.listmaxheight || "250px",
-    audio: options.music || [],
-    storageName: "aplayer-setting",
+    storageName: "yuefu-setting",
     // 新增模块机制
     modules: {
       testModule: {}
@@ -31,13 +25,13 @@ export default (options) => {
     options.audio = [options.audio];
   }
 
-  options.audio.map((item) => {
-    item.name = item.name || item.title || "Audio name";
-    item.artist = item.artist || item.author || "Audio artist";
-    item.cover = item.cover || item.pic;
-    item.type = item.type || "normal";
-    return item;
-  });
+  // options.audio.map((item) => {
+  //   item.name = item.name || item.title || "Audio name";
+  //   item.artist = item.artist || item.author || "Audio artist";
+  //   item.cover = item.cover || item.pic;
+  //   item.type = item.type || "normal";
+  //   return item;
+  // });
 
   if (options.audio.length <= 1 && options.loop === "one") {
     options.loop = "all";

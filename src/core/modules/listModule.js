@@ -96,7 +96,7 @@ class ListModule extends Module {
       const itemNode = document.createElement('li')
       itemNode.classList.add('yuefu-list-item')
       itemNode.innerHTML = `
-        <span class="yuefu-list-cur" style="background-color: #ebd0c2;"></span>
+        <span class="yuefu-list-cur" style="background-color: #444444;"></span>
         <span class="yuefu-list-index">${index+1}</span>
         <span class="yuefu-list-title">${audio.name || '无名'}</span>
         <span class="yuefu-list-author">${audio.artist || '未知'}</span>

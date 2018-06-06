@@ -16,6 +16,11 @@ const utils = {
     return (hour > 0 ? [hour, min, sec] : [min, sec]).map(add0).join(":");
   },
 
+  timeToSecond: (time) => {
+    const [min, sec] = time.split(':').map((num) => parseInt(num))
+    return (min * 60) + sec;
+  },
+
   /**
      * control play progress
      */

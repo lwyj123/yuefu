@@ -74,7 +74,7 @@ class Controller {
     };
 
     const thumbUp = (e) => {
-      this.player.template.volumeBarWrap.classList.remove("aplayer-volume-bar-wrap-active");
+      this.player.template.volumeBarWrap.classList.remove("yuefu-volume-bar-wrap-active");
       document.removeEventListener(utils.nameMap.dragEnd, thumbUp);
       document.removeEventListener(utils.nameMap.dragMove, thumbMove);
       let percentage = 1 - ((e.clientY || e.changedTouches[0].clientY) - utils.getElementViewTop(this.player.template.volumeBar, this.player.options.fixed)) / this.player.template.volumeBar.clientHeight;
@@ -84,7 +84,7 @@ class Controller {
     };
 
     this.player.template.volumeBarWrap.addEventListener(utils.nameMap.dragStart, () => {
-      this.player.template.volumeBarWrap.classList.add("aplayer-volume-bar-wrap-active");
+      this.player.template.volumeBarWrap.classList.add("yuefu-volume-bar-wrap-active");
       document.addEventListener(utils.nameMap.dragMove, thumbMove);
       document.addEventListener(utils.nameMap.dragEnd, thumbUp);
     });
@@ -158,12 +158,12 @@ class Controller {
 
   initLrcButton () {
     this.player.template.lrcButton.addEventListener("click", () => {
-      if (this.player.template.lrcButton.classList.contains("aplayer-icon-lrc-inactivity")) {
-        this.player.template.lrcButton.classList.remove("aplayer-icon-lrc-inactivity");
+      if (this.player.template.lrcButton.classList.contains("yuefu-icon-lrc-inactivity")) {
+        this.player.template.lrcButton.classList.remove("yuefu-icon-lrc-inactivity");
         this.player.lrc && this.player.lrc.show();
       }
       else {
-        this.player.template.lrcButton.classList.add("aplayer-icon-lrc-inactivity");
+        this.player.template.lrcButton.classList.add("yuefu-icon-lrc-inactivity");
         this.player.lrc && this.player.lrc.hide();
       }
     });

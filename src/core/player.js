@@ -35,26 +35,26 @@ class Player {
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
-    this.container.classList.add("aplayer");
+    this.container.classList.add("yuefu");
     if (this.options.lrcType) {
-      this.container.classList.add("aplayer-withlrc");
+      this.container.classList.add("yuefu-withlrc");
     }
     if (this.options.audio.length > 1) {
-      this.container.classList.add("aplayer-withlist");
+      this.container.classList.add("yuefu-withlist");
     }
     if (utils.isMobile) {
-      this.container.classList.add("aplayer-mobile");
+      this.container.classList.add("yuefu-mobile");
     }
     this.arrow = this.container.offsetWidth <= 300;
     if (this.arrow) {
-      this.container.classList.add("aplayer-arrow");
+      this.container.classList.add("yuefu-arrow");
     }
 
     // save lrc
     this.container = this.options.container;
     if (this.options.lrcType === 2 || this.options.lrcType === true) {
       const lrcEle = this.container.getElementsByClassName(
-        "aplayer-lrc-content"
+        "yuefu-lrc-content"
       );
       for (let i = 0; i < lrcEle.length; i++) {
         if (this.options.audio[i]) {
@@ -65,7 +65,7 @@ class Player {
 
     this.template = new Template({
       container: this.container,
-      options: this.options,
+      // options: this.options,
       randomOrder: this.randomOrder
     });
 
@@ -74,7 +74,7 @@ class Player {
       this.template.info.style.display = "block";
     }
     if (this.template.info.offsetWidth < 200) {
-      this.template.time.classList.add("aplayer-time-narrow");
+      this.template.time.classList.add("yuefu-time-narrow");
     }
 
     // if (this.options.lrcType) {
@@ -126,8 +126,6 @@ class Player {
         this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
     }
-
-    // this.volume(this.storage.get("volume"), true);
   }
 
   /**
@@ -227,19 +225,6 @@ class Player {
     }
   }
 
-  theme (color = this.list.audios[this.list.index].theme || this.options.theme, index = this.list.index, isReset = true) {
-    if (isReset) {
-      this.list.audios[index] && (this.list.audios[index].theme = color);
-    }
-    this.template.listCurs[index] && (this.template.listCurs[index].style.backgroundColor = color);
-    if (index === this.list.index) {
-      this.template.pic.style.backgroundColor = color;
-      // this.template.played.style.background = color;
-      // this.template.thumb.style.background = color;
-      // this.template.volume.style.background = color;
-    }
-  }
-
   seek (time) {
     time = Math.max(time, 0);
     time = Math.min(time, this.duration);
@@ -260,8 +245,8 @@ class Player {
   setUIPlaying () {
     if (this.paused) {
       this.paused = false;
-      // this.template.button.classList.remove("aplayer-play");
-      // this.template.button.classList.add("aplayer-pause");
+      // this.template.button.classList.remove("yuefu-play");
+      // this.template.button.classList.add("yuefu-pause");
       // this.template.button.innerHTML = "";
       setTimeout(() => {
         // this.template.button.innerHTML = Icons.pause;
@@ -298,8 +283,8 @@ class Player {
     if (!this.paused) {
       this.paused = true;
 
-      this.template.button.classList.remove("aplayer-pause");
-      this.template.button.classList.add("aplayer-play");
+      this.template.button.classList.remove("yuefu-pause");
+      this.template.button.classList.add("yuefu-play");
       this.template.button.innerHTML = "";
       setTimeout(() => {
         this.template.button.innerHTML = Icons.play;
@@ -307,7 +292,7 @@ class Player {
       // this.template.skipPlayButton.innerHTML = Icons.play;
     }
 
-    this.container.classList.remove("aplayer-loading");
+    this.container.classList.remove("yuefu-loading");
     this.timer.disable("loading");
   }
 
@@ -371,10 +356,10 @@ class Player {
  * toggle between play and pause
  */
   toggle () {
-    if (this.template.button.classList.contains("aplayer-play")) {
+    if (this.template.button.classList.contains("yuefu-play")) {
       this.play();
     }
-    else if (this.template.button.classList.contains("aplayer-pause")) {
+    else if (this.template.button.classList.contains("yuefu-pause")) {
       this.pause();
     }
   }
@@ -409,10 +394,10 @@ class Player {
   setMode (mode = "normal") {
     this.mode = mode;
     if (mode === "mini") {
-      this.container.classList.add("aplayer-narrow");
+      this.container.classList.add("yuefu-narrow");
     }
     else if (mode === "normal") {
-      this.container.classList.remove("aplayer-narrow");
+      this.container.classList.remove("yuefu-narrow");
     }
   }
 

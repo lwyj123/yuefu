@@ -24,7 +24,6 @@ yuefu.addModule(Yuefu.import('list'), {
     type: "normal",
     url: "http://lwio.me/api/storeroom/1526123245516.mp3",
     cover: "",
-    theme: "#ebd0c2",
     lrc: "http://localhost:8080/demo/demo.lrc",
   }, {
     name: "胖子非野子",
@@ -32,7 +31,6 @@ yuefu.addModule(Yuefu.import('list'), {
     type: "normal",
     url: "http://lwio.me/api/storeroom/1528112620919.mp3",
     cover: "",
-    theme: "#ba31ca",
     lrc: "http://localhost:8080/demo/demo2.lrc",
   }]
 })
