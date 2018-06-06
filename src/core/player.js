@@ -4,7 +4,6 @@ import utils from "./utils";
 import handleOption from "./handlerOption";
 // import Controller from "./controller";
 import ControllerModule from './modules/ControllerModule'
-import Timer from "./timer";
 // import List from "./list";
 import Storage from "./storage";
 import ProgressModule from "./modules/ProgressModule";
@@ -57,7 +56,6 @@ class Player {
     this.emitter = new Emitter();
     this.storage = new Storage(this);
     // this.controller = new Controller(this);
-    this.timer = new Timer(this);
     // this.list = new List(this);
 
     this.initAudio();
@@ -205,8 +203,6 @@ class Player {
       this.paused = false;
     }
 
-    this.timer.enable("loading");
-
     if (this.options.mutex) {
       for (let i = 0; i < instances.length; i++) {
         if (this !== instances[i]) {
@@ -237,7 +233,6 @@ class Player {
     }
 
     this.container.classList.remove("yuefu-loading");
-    this.timer.disable("loading");
   }
 
   pause () {
@@ -320,7 +315,6 @@ class Player {
     this.pause();
     this.container.innerHTML = "";
     this.audioDOM.src = "";
-    this.timer.destroy();
     this.emitter.emit(Emitter.playerEvents.DESTORY);
   }
 

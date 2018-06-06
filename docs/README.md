@@ -33,7 +33,7 @@ yuefu.addModule(Yuefu.import('progress'), {
 yuefu.addModule(Yuefu.import('list'), {
   audios: [{
     name: "peace sign",
-    artist: "Goose house",
+    artist: "JAKI",
     type: "normal",
     url: "http://lwio.me/api/storeroom/1526123245516.mp3",
     cover: "",
