@@ -1,9 +1,17 @@
 @import './progress.scss';
 @import './list.scss';
 @import './lrc.scss';
+@import './controller.scss';
 $yuefu-height: 66px;
 $lrc-height: 30px;
 $yuefu-height-lrc: $yuefu-height + $lrc-height - 6;
+
+// TODO: css reset
+button {
+    &:focus {
+        outline: none;
+    }
+}
 
 .yuefu {
     background: #fff;

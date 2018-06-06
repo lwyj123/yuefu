@@ -24,14 +24,14 @@ yuefu.addModule(Yuefu.import('list'), {
     type: "normal",
     url: "http://lwio.me/api/storeroom/1526123245516.mp3",
     cover: "",
-    lrc: "http://localhost:8080/demo/demo.lrc",
+    lrc: "http://cdn.lwio.me/yuefu/lrc/demo.lrc",
   }, {
     name: "胖子非野子",
     artist: "JAKI",
     type: "normal",
     url: "http://lwio.me/api/storeroom/1528112620919.mp3",
     cover: "",
-    lrc: "http://localhost:8080/demo/demo2.lrc",
+    lrc: "http://cdn.lwio.me/yuefu/lrc/demo2.lrc",
   }]
 })
 

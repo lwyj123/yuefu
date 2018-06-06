@@ -49,6 +49,10 @@ class Controller {
     controllerNode.addEventListener('click', () => {
       options.handler.call(null, board.player)
     })
+    if(options.tag === 'button') {
+      controllerNode.classList.add('btn')
+      controllerNode.classList.add('blue')
+    }
     board.container.appendChild(controllerNode)
   }
 }
