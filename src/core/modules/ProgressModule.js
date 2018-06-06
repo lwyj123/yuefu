@@ -44,8 +44,6 @@ class ProgressModule extends Module {
     const self = this;
     this.player.on(Emitter.audioEvents.TIME_UPDATE, () => {
       if (!self.player.disableTimeupdate) {
-        // this.bar.set("played", this.audio.currentTime / this.duration, "width");
-        // this.lrc && this.lrc.update();
         const currentTime = utils.secondToTime(self.player.audioDOM.currentTime);
         if (self.playedTimeNode.innerHTML !== currentTime) {
           self.updatePlayedTime(currentTime);
@@ -58,6 +56,9 @@ class ProgressModule extends Module {
         self.updateMusicTime(durationTime);
       }
     });
+    this.player.on(Emitter.playerEvents.AUDIO_SWITCH, () => {
+      self.updatePlayedTime('00:00')
+    })
   }
 
   bindProgressEvent() {

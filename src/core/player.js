@@ -7,7 +7,6 @@ import Icons from "./icons";
 import ControllerModule from './modules/ControllerModule'
 import Timer from "./timer";
 // import List from "./list";
-import Template from "./template"; // 全部删除
 import Storage from "./storage";
 import ProgressModule from "./modules/ProgressModule";
 import ListModule from "./modules/ListModule";
@@ -50,40 +49,12 @@ class Player {
       this.container.classList.add("yuefu-arrow");
     }
 
-    // save lrc
     this.container = this.options.container;
-    if (this.options.lrcType === 2 || this.options.lrcType === true) {
-      const lrcEle = this.container.getElementsByClassName(
-        "yuefu-lrc-content"
-      );
-      for (let i = 0; i < lrcEle.length; i++) {
-        if (this.options.audio[i]) {
-          this.options.audio[i].lrc = lrcEle[i].innerHTML;
-        }
-      }
-    }
 
-    this.template = new Template({
-      container: this.container,
-      // options: this.options,
-      randomOrder: this.randomOrder
-    });
+    const bodyNode = document.createElement('div')
+    bodyNode.classList.add('yuefu-body')
+    this.container.appendChild(bodyNode)
 
-    if (this.options.mini) {
-      this.setMode("mini");
-      this.template.info.style.display = "block";
-    }
-    if (this.template.info.offsetWidth < 200) {
-      this.template.time.classList.add("yuefu-time-narrow");
-    }
-
-    // if (this.options.lrcType) {
-    //   this.lrc = new Lrc({
-    //     container: this.template.lrc,
-    //     async: this.options.lrcType === 3,
-    //     player: this
-    //   });
-    // }
     this.emitter = new Emitter();
     this.storage = new Storage(this);
     // this.controller = new Controller(this);
@@ -92,16 +63,6 @@ class Player {
 
     this.initAudio();
     this.bindEvents();
-    // if (this.options.order === "random") {
-    //   this.list.switch(this.randomOrder[0]);
-    // } else {
-    //   this.list.switch(0);
-    // }
-
-    // autoplay
-    if (this.options.autoplay) {
-      this.play();
-    }
 
     instances.push(this);
   }
@@ -230,8 +191,6 @@ class Player {
     time = Math.min(time, this.duration);
 
     this.audioDOM.currentTime = time;
-    // this.bar.set("played", time / this.duration, "width");
-    // this.template.ptime.innerHTML = utils.secondToTime(time);
   }
 
   get currentAudio () {
@@ -245,13 +204,6 @@ class Player {
   setUIPlaying () {
     if (this.paused) {
       this.paused = false;
-      // this.template.button.classList.remove("yuefu-play");
-      // this.template.button.classList.add("yuefu-pause");
-      // this.template.button.innerHTML = "";
-      setTimeout(() => {
-        // this.template.button.innerHTML = Icons.pause;
-      }, 100);
-      // this.template.skipPlayButton.innerHTML = Icons.pause;
     }
 
     this.timer.enable("loading");
@@ -283,13 +235,6 @@ class Player {
     if (!this.paused) {
       this.paused = true;
 
-      this.template.button.classList.remove("yuefu-pause");
-      this.template.button.classList.add("yuefu-play");
-      this.template.button.innerHTML = "";
-      setTimeout(() => {
-        this.template.button.innerHTML = Icons.play;
-      }, 100);
-      // this.template.skipPlayButton.innerHTML = Icons.play;
     }
 
     this.container.classList.remove("yuefu-loading");
@@ -297,20 +242,9 @@ class Player {
   }
 
   pause () {
+
     this.setUIPaused();
     this.audioDOM.pause();
-  }
-
-  switchVolumeIcon () {
-    if (this.volume() >= 0.95) {
-      this.template.volumeButton.innerHTML = Icons.volumeUp;
-    }
-    else if (this.volume() > 0) {
-      this.template.volumeButton.innerHTML = Icons.volumeDown;
-    }
-    else {
-      this.template.volumeButton.innerHTML = Icons.volumeOff;
-    }
   }
 
   /**
@@ -356,10 +290,10 @@ class Player {
  * toggle between play and pause
  */
   toggle () {
-    if (this.template.button.classList.contains("yuefu-play")) {
+    if (this.paused) {
       this.play();
     }
-    else if (this.template.button.classList.contains("yuefu-pause")) {
+    else {
       this.pause();
     }
   }
@@ -398,31 +332,6 @@ class Player {
     }
     else if (mode === "normal") {
       this.container.classList.remove("yuefu-narrow");
-    }
-  }
-
-  /**
-   * TODO: 使用Module的方式实现，重构planning
-   *
-   * @param {any} text
-   * @param {number} [time=2000]
-   * @param {number} [opacity=0.8]
-   * @memberof Player
-   */
-  notice (text, time = 2000, opacity = 0.8) {
-    this.template.notice.innerHTML = text;
-    this.template.notice.style.opacity = opacity;
-    if (this.noticeTime) {
-      clearTimeout(this.noticeTime);
-    }
-    this.emitter.emit(Emitter.playerEvents.NOTICE_SHOW, {
-      text: text,
-    });
-    if (time) {
-      this.noticeTime = setTimeout(() => {
-        this.template.notice.style.opacity = 0;
-        this.emitter.emit(Emitter.playerEvents.NOTICE_HIDE);
-      }, time);
     }
   }
 

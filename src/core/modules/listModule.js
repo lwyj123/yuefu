@@ -75,7 +75,7 @@ class ListModule extends Module {
 
       this.player.container.querySelectorAll(".yuefu-list li")[this.index].classList.add("yuefu-list-light");
 
-      smoothScroll(this.index * 33, 500, null, this.player.template.listOl);
+      // smoothScroll(this.index * 33, 500, null, this.listNode);
 
       this.player.setAudio(audio);
     }
