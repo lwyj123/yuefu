@@ -10,10 +10,6 @@ export default (options) => {
     preload: "auto",
     volume: 0.7,
     storageName: "yuefu-setting",
-    // 新增模块机制
-    modules: {
-      testModule: {}
-    }
   };
   for (const defaultKey in defaultOption) {
     if (defaultOption.hasOwnProperty(defaultKey) && !options.hasOwnProperty(defaultKey)) {

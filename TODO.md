@@ -4,6 +4,7 @@
 3. 一些模块自身的事件
 4. LrcModule考虑挂载dom自定义。
 5. Progress拖动性能比较差，考虑函数节流
+6. 完善音量部分，并在ControllerModule中加入demo
 
 
 # 发版前需要做完的
