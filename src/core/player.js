@@ -3,12 +3,15 @@ import logger from "./logger";
 import utils from "./utils";
 import handleOption from "./handlerOption";
 // import Controller from "./controller";
-import ControllerModule from './modules/ControllerModule'
+import ControllerModule from "./modules/ControllerModule";
 // import List from "./list";
 import Storage from "./storage";
+import Template from "./template";
 import ProgressModule from "./modules/ProgressModule";
 import ListModule from "./modules/ListModule";
 import LrcModule from "./modules/LrcModule";
+
+import defaultTemplate from "../templates/default";
 
 // 多实例管理
 const instances = [];
@@ -49,12 +52,18 @@ class Player {
 
     this.container = this.options.container;
 
-    const bodyNode = document.createElement('div')
-    bodyNode.classList.add('yuefu-body')
-    this.container.appendChild(bodyNode)
+    const bodyNode = document.createElement("div");
+    bodyNode.classList.add("yuefu-body");
+    this.container.appendChild(bodyNode);
 
     this.emitter = new Emitter();
     this.storage = new Storage(this);
+    this.template = new Template(defaultTemplate.template, {
+      test (node, directiveMeta) {
+
+      }
+    });
+    this.template.render();
     // this.controller = new Controller(this);
     // this.list = new List(this);
 
@@ -71,7 +80,7 @@ class Player {
    * @memberof Player
    */
   static import(name) {
-    return Player.imports[name]
+    return Player.imports[name];
   }
 
   initAudio() {
@@ -80,7 +89,7 @@ class Player {
 
     for(const eventSymbol in Emitter.audioEvents) {
       this.audioDOM.addEventListener(Emitter.audioEvents[eventSymbol], e => {
-        console.log(Emitter.audioEvents[eventSymbol])
+        console.log(Emitter.audioEvents[eventSymbol]);
         this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
     }
@@ -191,7 +200,7 @@ class Player {
   }
 
   get currentAudio () {
-    return this.audio
+    return this.audio;
   }
 
   get duration () {
@@ -377,8 +386,8 @@ class Player {
     this.list.switch(this.nextIndex());
   }
   addModule (moduleClass, options = {}) {
-    this.modules[moduleClass.name] = new moduleClass(this, options)
-    return this.modules[moduleClass.name]
+    this.modules[moduleClass.name] = new moduleClass(this, options);
+    return this.modules[moduleClass.name];
   }
 
   static get version () {
@@ -388,11 +397,11 @@ class Player {
 }
 
 Player.imports = {
-  'emitter': Emitter,
-  'controller': ControllerModule,
-  'progress': ProgressModule,
-  'list': ListModule,
-  'lrc': LrcModule,
-}
+  "emitter": Emitter,
+  "controller": ControllerModule,
+  "progress": ProgressModule,
+  "list": ListModule,
+  "lrc": LrcModule,
+};
 
 export default Player;

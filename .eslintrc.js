@@ -24,6 +24,6 @@ module.exports = {
             "error",
             "always"
         ],
-        "no-debugger": "warning"
+        "no-debugger": "off"
     }
 };
