@@ -12,6 +12,7 @@ import ListModule from "./modules/ListModule";
 import LrcModule from "./modules/LrcModule";
 
 import defaultTemplate from "../templates/default";
+import learningTemplate from "../templates/learning";
 
 // 多实例管理
 const instances = [];
@@ -58,7 +59,28 @@ class Player {
 
     this.emitter = new Emitter();
     this.storage = new Storage(this);
-    this.template = new Template(defaultTemplate.template, {
+
+    // 插入wrapper
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("wrapper");
+    document.body.appendChild(wrapper);
+
+    this.template = new Template("div.wrapper",learningTemplate, {
+      data: {
+        title: "如何练就逻辑清晰的好口才",
+        duration: "02:00",
+        playState: "playing",
+      },
+      methods: {
+        togglePlayState: function() {
+          console.log("click toggle");
+          this.playState = this.playState === "playing" ? "paused" : "playing";
+        },
+        togglePlayingClass() {
+          this.playingClass = this.playingClass === "play" ? "pause" : "play";
+        }
+      },
+    }, {
       test (node, directiveMeta) {
 
       }

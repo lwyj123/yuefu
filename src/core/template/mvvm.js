@@ -21,7 +21,7 @@ function MVVM(options) {
 
   observe(data, this);
 
-  this.$compile = new Compile(options.templateDescriptor, this);
+  this.$compile = new Compile(options.el, options.templateDescriptor, this);
 }
 
 MVVM.prototype = {
