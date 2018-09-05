@@ -1,36 +1,34 @@
 import Watcher from "./watcher";
 
-function Compile(templateDescriptor, vm) {
+function Compile(el, templateDescriptor, vm) {
   this.$vm = vm;
-  this.$el = document.createElement("div");
-
+  this.$el = document.querySelector(el)
   if (this.$el) {
     this.$fragment = this.node2Fragment();
     this.init(templateDescriptor);
     this.$el.appendChild(this.$fragment);
-    document.body.appendChild(this.$el);
   }
 }
 
-function createElement(tag, data, childrens = [], type) {
+function createElement(tag, data, childrens = []) {
   const dom = document.createElement(tag);
-  debugger;
-  // attr
-  if(data && data.attrs) {
-    Object.keys(data && data.attrs || {}).forEach((attr) => {
-      compileUtil.eventHandler(dom, this, attr);
-    });
+  if(data && data.on && data.on.click) {
+    dom.addEventListener("click", data.on.click.bind(this));
   }
 
-  // event
-  if(data && data.on && data.on.click) {
-    dom.addEventListener("click", data.on.click);
+  debugger
+  const attrs = (data && data.attrs) ? data.attrs : {}
+  Object.keys(attrs).forEach((attr) => {
+    dom.setAttribute(attr, data.attrs[attr])
+  })
+
+  if(data && (data.class || data.staticClass)) {
+    dom.setAttribute('class', (data.class ? data.class : ' ') + (data.staticClass ? data.staticClass : ''))
   }
 
   childrens && childrens.forEach((child) => {
     dom.appendChild(child);
   });
-  debugger;
   return dom;
 }
 
@@ -49,61 +47,60 @@ Compile.prototype = {
   },
 
   init: function(templateDescriptor) {
-    this.$vm.render = new Function(templateDescriptor);
+    this.$vm.ast = templateDescriptor.ast;
+    this.$vm.render = new Function(templateDescriptor.render);
     this.$vm._c = createElement;
     // this.$vm._v = document.createTextNode;
     this.$vm._v = document.createTextNode.bind(document);
     this.$vm._s = (str) => {
-      return str.toString();
+      return `${str.toString()}`;
     };
     let res = this.$vm.render();
     this.$fragment.appendChild(res);
-    debugger;
-    this.compileElement(this.$fragment);
-
+    this.compileElement(this.$fragment, [this.$vm.ast]);
   },
 
-  compileElement: function(el) {
-    var childNodes = el.childNodes,
-      me = this;
-
-    [].slice.call(childNodes).forEach(function(node) {
-      var text = node.textContent;
-      var reg = /\{\{(.*)\}\}/;
-
-      if (me.isElementNode(node)) {
-        me.compile(node);
-
-      } else if (me.isTextNode(node) && reg.test(text)) {
-        me.compileText(node, RegExp.$1);
+  compileElement: function(el, ast) {
+    var childNodes = el.childNodes;
+    [].slice.call(childNodes).forEach((node, index) => {
+      if (this.isElementNode(node) || this.isTextNode(node)) {
+        this.compile(node, ast[index]);
       }
 
       if (node.childNodes && node.childNodes.length) {
-        me.compileElement(node);
+        this.compileElement(node, ast[index].children);
       }
     });
   },
 
-  compile: function(node) {
-    var nodeAttrs = node.attributes,
-      me = this;
+  compile: function(node, ast) {
+    debugger
+    var attrs = ast.attrsMap || {};
+    Object.keys(attrs).forEach((attr) => {
 
-    [].slice.call(nodeAttrs).forEach(function(attr) {
-      var attrName = attr.name;
-      if (me.isDirective(attrName)) {
-        var exp = attr.value;
-        var dir = attrName.substring(2);
-        // 事件指令
-        if (me.isEventDirective(dir)) {
-          compileUtil.eventHandler(node, me.$vm, exp, dir);
-          // 普通指令
-        } else {
-          compileUtil[dir] && compileUtil[dir](node, me.$vm, exp);
+    })
+    if(ast.classBinding) {
+      compileUtil.bind(this.$vm, ast.classBinding)
+    }
+
+    // v-if
+    if(ast.ifConditions) {
+
+    }
+
+    // text binding
+    if(ast.type === 2) {
+      ast.tokens.forEach((token) => {
+        if(token['@binding']) {
+          compileUtil.bind(this.$vm, token['@binding'])
         }
+      })
+    }
+    // classBinding
 
-        node.removeAttribute(attrName);
-      }
-    });
+      // attrsBinding
+
+      // eventBinding
   },
 
   compileText: function(node, exp) {
@@ -126,6 +123,9 @@ Compile.prototype = {
     return node.nodeType == 3;
   }
 };
+
+// 防止重复binding
+var bindingCached = {}
 
 // 指令处理集合
 var compileUtil = {
@@ -157,14 +157,19 @@ var compileUtil = {
     this.bind(node, vm, exp, "class");
   },
 
-  bind: function(node, vm, exp, dir) {
-    var updaterFn = updater[dir + "Updater"];
-
-    updaterFn && updaterFn(node, this._getVMVal(vm, exp));
-
+  // TODO: 局部更新？
+  bind: function(vm, exp) {
+    if(bindingCached[exp]) {
+      return
+    }
+    var updaterFn = () => {
+      const wrapperDOM = document.querySelector(vm.$options.el)
+      wrapperDOM.replaceChild(vm.render(), wrapperDOM.childNodes[0])
+    }
     new Watcher(vm, exp, function(value, oldValue) {
-      updaterFn && updaterFn(node, value, oldValue);
+      updaterFn && updaterFn();
     });
+    bindingCached[exp] = true;
   },
 
   // 事件处理

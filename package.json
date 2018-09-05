@@ -49,6 +49,6 @@
     "eventemitter3": "^3.1.0",
     "pushstate-server": "^3.0.1",
     "smoothscroll": "^0.4.0",
-    "yuefu-template-compiler": "^1.0.4"
+    "yuefu-template-compiler": "^1.1.2"
   }
 }
