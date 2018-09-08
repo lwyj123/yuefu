@@ -11,7 +11,6 @@ import ProgressModule from "./modules/ProgressModule";
 import ListModule from "./modules/ListModule";
 import LrcModule from "./modules/LrcModule";
 
-import defaultTemplate from "../templates/default";
 import learningTemplate from "../templates/learning";
 
 // 多实例管理
@@ -69,16 +68,15 @@ class Player {
       data: {
         title: "如何练就逻辑清晰的好口才",
         duration: "02:00",
-        playState: "playing",
+        playState: "paused",
+        playingClass: "pause"
       },
       methods: {
         togglePlayState: function() {
           console.log("click toggle");
           this.playState = this.playState === "playing" ? "paused" : "playing";
-        },
-        togglePlayingClass() {
           this.playingClass = this.playingClass === "play" ? "pause" : "play";
-        }
+        },
       },
     }, {
       test (node, directiveMeta) {
