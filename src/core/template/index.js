@@ -22,7 +22,6 @@ class Template {
     });
 
     const style = insertCss(this.template.style);
-    debugger;
   }
 }
 Template.DEFAULTS = {};

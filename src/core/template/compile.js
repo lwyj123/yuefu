@@ -2,7 +2,7 @@ import Watcher from "./watcher";
 
 function Compile(el, templateDescriptor, vm) {
   this.$vm = vm;
-  this.$el = document.querySelector(el)
+  this.$el = document.querySelector(el);
   if (this.$el) {
     this.$fragment = this.node2Fragment();
     this.init(templateDescriptor);
@@ -12,18 +12,14 @@ function Compile(el, templateDescriptor, vm) {
 
 function createElement(tag, data, childrens = []) {
   const dom = document.createElement(tag);
-  if(data && data.on && data.on.click) {
-    dom.addEventListener("click", data.on.click.bind(this));
-  }
 
-  debugger
-  const attrs = (data && data.attrs) ? data.attrs : {}
+  const attrs = (data && data.attrs) ? data.attrs : {};
   Object.keys(attrs).forEach((attr) => {
-    dom.setAttribute(attr, data.attrs[attr])
-  })
+    dom.setAttribute(attr, data.attrs[attr]);
+  });
 
   if(data && (data.class || data.staticClass)) {
-    dom.setAttribute('class', (data.class ? data.class : ' ') + (data.staticClass ? data.staticClass : ''))
+    dom.setAttribute("class", ((data.class ? data.class : " ") + " " + (data.staticClass ? data.staticClass : " ")).trim());
   }
 
   childrens && childrens.forEach((child) => {
@@ -50,6 +46,7 @@ Compile.prototype = {
     this.$vm.ast = templateDescriptor.ast;
     this.$vm.render = new Function(templateDescriptor.render);
     this.$vm._c = createElement;
+    this.$vm._e = document.createComment.bind(document, "");
     // this.$vm._v = document.createTextNode;
     this.$vm._v = document.createTextNode.bind(document);
     this.$vm._s = (str) => {
@@ -74,33 +71,44 @@ Compile.prototype = {
   },
 
   compile: function(node, ast) {
-    debugger
     var attrs = ast.attrsMap || {};
     Object.keys(attrs).forEach((attr) => {
 
-    })
+    });
+
     if(ast.classBinding) {
-      compileUtil.bind(this.$vm, ast.classBinding)
+      compileUtil.bindClass(node, this.$vm, ast.classBinding);
     }
 
     // v-if
-    if(ast.ifConditions) {
+    // if(ast.ifConditions) {
+    //   debugger;
+    //   compileUtil.bindIf(node, this.$vm, ast.ifConditions[0].exp);
+    // }
 
+    if(ast.events) {
+      const self = this;
+      Object.keys(ast.events).forEach((event) => {
+        if(event === "click") {
+          const exp = ast.events[event].value;
+          const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
+          node.addEventListener("click", fn.bind(self.$vm), false);
+        }
+      });
     }
-
     // text binding
     if(ast.type === 2) {
       ast.tokens.forEach((token) => {
-        if(token['@binding']) {
-          compileUtil.bind(this.$vm, token['@binding'])
+        if(token["@binding"]) {
+          compileUtil.bind(this.$vm, token["@binding"]);
         }
-      })
+      });
     }
     // classBinding
 
-      // attrsBinding
+    // attrsBinding
 
-      // eventBinding
+    // eventBinding
   },
 
   compileText: function(node, exp) {
@@ -125,7 +133,7 @@ Compile.prototype = {
 };
 
 // 防止重复binding
-var bindingCached = {}
+var bindingCached = {};
 
 // 指令处理集合
 var compileUtil = {
@@ -153,23 +161,69 @@ var compileUtil = {
     });
   },
 
-  class: function(node, vm, exp) {
-    this.bind(node, vm, exp, "class");
+  bindClass: function(node, vm, exp) {
+    function classUpdater(node, value, oldValue) {
+      let className = node.className;
+      const reg = new RegExp(`\\b${oldValue}\\b`);
+      className = className.replace(reg, value);
+
+      node.className = className;
+    }
+    new Watcher(vm, exp, function(value, oldValue) {
+      classUpdater(node, value, oldValue);
+    });
   },
+
+  // bindIf: function(node, vm, exp) {
+  //   // 这个注释节点就是用来占位的，好让我们记住原先的b-if指令DOM结构在哪儿
+  //   let ref = document.createComment("yuefu-if");
+  //   // node.parentNode.insertBefore(ref, node);
+  //   debugger;
+  //   function ifUpdater(node, value, oldValue) {
+  //     debugger;
+  //     if(value) {
+  //       debugger;
+  //       node.parentNode.replaceChild(ref, node);
+  //       ref = node;
+  //     } else {
+  //       debugger;
+  //       node.parentNode.replaceChild(ref, node);
+  //       ref = node;
+  //     }
+  //     debugger;
+  //   }
+
+  //   new Watcher(
+  //     vm,
+  //     (vm) => {
+  //       const evaluation = new Function(`with(this) {
+  //         return ${exp}
+  //       }`);
+  //       debugger;
+  //       return evaluation.call(vm, exp);
+  //     },
+  //     function(value, oldValue) {
+  //       debugger;
+  //       ifUpdater(node, value, oldValue);
+  //     });
+
+  //   this.inserted = false;
+  // },
 
   // TODO: 局部更新？
   bind: function(vm, exp) {
     if(bindingCached[exp]) {
-      return
+      return;
     }
     var updaterFn = () => {
-      const wrapperDOM = document.querySelector(vm.$options.el)
-      wrapperDOM.replaceChild(vm.render(), wrapperDOM.childNodes[0])
-    }
+      const wrapperDOM = document.querySelector(vm.$options.el);
+      wrapperDOM.replaceChild(vm.render(), wrapperDOM.childNodes[0]);
+    };
     new Watcher(vm, exp, function(value, oldValue) {
       updaterFn && updaterFn();
     });
     bindingCached[exp] = true;
+
   },
 
   // 事件处理
@@ -213,15 +267,6 @@ var updater = {
 
   htmlUpdater: function(node, value) {
     node.innerHTML = typeof value == "undefined" ? "" : value;
-  },
-
-  classUpdater: function(node, value, oldValue) {
-    var className = node.className;
-    className = className.replace(oldValue, "").replace(/\s$/, "");
-
-    var space = className && String(value) ? " " : "";
-
-    node.className = className + space + value;
   },
 
   modelUpdater: function(node, value, oldValue) {
