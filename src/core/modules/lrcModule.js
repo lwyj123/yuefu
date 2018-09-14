@@ -1,41 +1,40 @@
-import Module from '../module'
-import Emitter from '../emitter'
-import utils from '../utils'
+import Module from "../module";
+import Emitter from "../emitter";
 
-const EVENTS = {
-  LRC_LOADED: 'lrc:lrc-loaded'
-}
+export const EVENTS = {
+  LRC_LOADED: "lrc:lrc-loaded"
+};
 
 class LrcModule extends Module {
   constructor(player, options) {
-    super(player, options)
-    this.options = options
+    super(player, options);
+    this.options = options;
 
     this.parsed = null;
     this.index = 0;
 
-    this.init()
-    console.log(`[module] ${LrcModule.name} init`)
+    this.init();
+    console.log("[LrcModule]", LrcModule.name, "init");
   }
   static get name() {
-    return 'lrc'
+    return "lrc";
   }
 
   init() {
-    const lrcNode = document.createElement('ol');
-    lrcNode.classList.add('yuefu-lrc')
+    const lrcNode = document.createElement("ol");
+    lrcNode.classList.add("yuefu-lrc");
     lrcNode.innerHTML= `
       <div class="yuefu-lrc-contents"></div>
-    `
-    this.player.container.appendChild(lrcNode)
-    this.lrcNode = lrcNode
-    this.lrcContentsNode = lrcNode.querySelector('.yuefu-lrc-contents')
+    `;
+    this.player.container.appendChild(lrcNode);
+    this.lrcNode = lrcNode;
+    this.lrcContentsNode = lrcNode.querySelector(".yuefu-lrc-contents");
 
     // 监听audio变化事件，加载切换后的歌词
     this.player.emitter.on(Emitter.playerEvents.AUDIO_SWITCH, (index, audio) => {
-      this.switch(audio.lrc)
-    })
-    this.switch(this.player.currentAudio && this.player.currentAudio.lrc)
+      this.switch(audio.lrc);
+    });
+    this.switch(this.player.currentAudio && this.player.currentAudio.lrc);
 
     const self = this;
     this.player.on(Emitter.audioEvents.TIME_UPDATE, () => {
@@ -52,7 +51,7 @@ class LrcModule extends Module {
           this.index = i;
           this.lrcContentsNode.style.transform = `translateY(${-this.index * 16}px)`;
           this.lrcContentsNode.style.webkitTransform = `translateY(${-this.index * 16}px)`;
-          const currentLineNode = this.lrcContentsNode.querySelector(".yuefu-lrc-current")
+          const currentLineNode = this.lrcContentsNode.querySelector(".yuefu-lrc-current");
           currentLineNode && currentLineNode.classList.remove("yuefu-lrc-current");
           this.lrcContentsNode.getElementsByTagName("p")[i].classList.add("yuefu-lrc-current");
         }
@@ -76,10 +75,10 @@ class LrcModule extends Module {
           }
 
           const contents = self.parsed.reduce((pre, [index, lyric]) => {
-            return pre + `<p>${lyric}</p>`
-          }, '')
+            return pre + `<p>${lyric}</p>`;
+          }, "");
 
-          self.lrcContentsNode.innerHTML = contents
+          self.lrcContentsNode.innerHTML = contents;
 
           self.update(0);
         }
@@ -147,4 +146,4 @@ class LrcModule extends Module {
 
 }
 
-export default LrcModule
+export default LrcModule;

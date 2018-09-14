@@ -1,23 +1,23 @@
-import Module from '../module'
-import Emitter from '../emitter'
-import utils from '../utils'
+import Module from "../module";
+import Emitter from "../emitter";
+import utils from "../utils";
 
 
 class ProgressModule extends Module {
   constructor(player, options) {
-    super(player, options)
-    this.options = options
+    super(player, options);
+    this.options = options;
 
-    this.init()
-    console.log(`[module] ${ProgressModule.name} init`)
+    this.init();
+    console.log("[ProgressModule]", ProgressModule.name, "init");
   }
   static get name() {
-    return 'progress'
+    return "progress";
   }
 
   init() {
-    const progress = document.createElement('div');
-    progress.classList.add('yuefu-progress')
+    const progress = document.createElement("div");
+    progress.classList.add("yuefu-progress");
     progress.innerHTML = `
     <div class="yuefu-bar-wrap">
         <div class="yuefu-bar">
@@ -33,13 +33,13 @@ class ProgressModule extends Module {
             <span class="yuefu-ptime">00:00</span> / <span class="yuefu-dtime">00:00</span>
         </span>
     </div>
-    `
+    `;
     this.player.container.appendChild(progress);
-    this.playedProgressNode = this.player.container.querySelector('.yuefu-played')
-    this.playedTimeNode = this.player.container.querySelector('.yuefu-ptime')
-    this.musicTimeNode = this.player.container.querySelector('.yuefu-dtime')
+    this.playedProgressNode = this.player.container.querySelector(".yuefu-played");
+    this.playedTimeNode = this.player.container.querySelector(".yuefu-ptime");
+    this.musicTimeNode = this.player.container.querySelector(".yuefu-dtime");
 
-    this.bindProgressEvent()
+    this.bindProgressEvent();
 
     const self = this;
     this.player.on(Emitter.audioEvents.TIME_UPDATE, () => {
@@ -57,19 +57,19 @@ class ProgressModule extends Module {
       }
     });
     this.player.on(Emitter.playerEvents.AUDIO_SWITCH, () => {
-      self.updatePlayedTime('00:00')
-    })
+      self.updatePlayedTime("00:00");
+    });
   }
 
   bindProgressEvent() {
     const self = this;
-    const progressWrap = this.player.container.querySelector('.yuefu-bar-wrap')
+    const progressWrap = this.player.container.querySelector(".yuefu-bar-wrap");
     const thumbMove = (e) => {
       let percentage = ((e.clientX || e.changedTouches[0].clientX) - utils.getElementViewLeft(progressWrap)) / progressWrap.clientWidth;
       percentage = Math.max(percentage, 0);
       percentage = Math.min(percentage, 1);
       this.playedTimeNode.innerHTML = utils.secondToTime(percentage * self.player.duration);
-      this.updatePlayedTime(utils.secondToTime(percentage * self.player.duration))
+      this.updatePlayedTime(utils.secondToTime(percentage * self.player.duration));
     };
 
     const thumbUp = (e) => {
@@ -82,10 +82,10 @@ class ProgressModule extends Module {
       percentage = Math.min(percentage, 1);
       self.player.seek(percentage * self.player.duration);
       self.player.disableTimeupdate = false;
-      console.log(`[progress] seek time into ${percentage * self.player.duration}`)
+      console.log(`[progress] seek time into ${percentage * self.player.duration}`);
     };
 
-    this.player.container.querySelector('.yuefu-bar-wrap').addEventListener(utils.nameMap.dragStart, () => {
+    this.player.container.querySelector(".yuefu-bar-wrap").addEventListener(utils.nameMap.dragStart, () => {
       this.player.disableTimeupdate = true;
       document.addEventListener(utils.nameMap.dragMove, thumbMove);
       document.addEventListener(utils.nameMap.dragEnd, thumbUp);
@@ -93,11 +93,11 @@ class ProgressModule extends Module {
   }
   updatePlayedTime(time) {
     this.playedTimeNode.innerHTML = time;
-    this.playedProgressNode.style.width = `${(utils.timeToSecond(time) / this.player.duration * 100).toFixed(0)}%`
+    this.playedProgressNode.style.width = `${(utils.timeToSecond(time) / this.player.duration * 100).toFixed(0)}%`;
   }
   updateMusicTime(time) {
     this.musicTimeNode.innerHTML = time;
   }
 }
 
-export default ProgressModule
+export default ProgressModule;

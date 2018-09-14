@@ -35,6 +35,10 @@ class Player {
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
+    if(this.options.debug) {
+      window.yuefu = this;
+    }
+
     this.container.classList.add("yuefu");
     if (this.options.lrcType) {
       this.container.classList.add("yuefu-withlrc");
@@ -72,7 +76,6 @@ class Player {
         playingClass: "pause"
       },
       mounted() {
-        debugger;
         this.$player.on("progress", () => {
           console.log("player progress");
         });
@@ -115,7 +118,9 @@ class Player {
 
     for(const eventSymbol in Emitter.audioEvents) {
       this.audioDOM.addEventListener(Emitter.audioEvents[eventSymbol], e => {
-        console.log(Emitter.audioEvents[eventSymbol]);
+        if(this.options.debug) {
+          console.log("[core]", "event:", Emitter.audioEvents[eventSymbol], e);
+        }
         this.emitter.emit(Emitter.audioEvents[eventSymbol], e);
       });
     }
@@ -219,10 +224,21 @@ class Player {
   }
 
   seek (time) {
-    time = Math.max(time, 0);
-    time = Math.min(time, this.duration);
+    let targetTime = time;
+    targetTime = Math.max(time, 0);
+    targetTime = Math.min(time, this.duration);
 
-    this.audioDOM.currentTime = time;
+    this.audioDOM.currentTime = targetTime;
+  }
+  seekNextSecond(second) {
+    const currentTime = this.audioDOM.currentTime;
+    let targetTime = currentTime + second;
+    this.seek(targetTime);
+  }
+  seekPrevSecond(second) {
+    const currentTime = this.audioDOM.currentTime;
+    let targetTime = currentTime - second;
+    this.seek(targetTime);
   }
 
   get currentAudio () {
@@ -417,7 +433,7 @@ class Player {
   }
 
   static get version () {
-    /* global APLAYER_VERSION */
+    /* global YUEFU_VERSION */
     return YUEFU_VERSION;
   }
 }

@@ -3,6 +3,7 @@ export default (options) => {
   // default options
   const defaultOption = {
     container: options.element || document.getElementsByClassName("yuefu")[0],
+    debug: options.debug || false,
     mini: options.narrow || options.fixed || false,
     autoplay: false,
     mutex: true,

@@ -1,35 +1,35 @@
-import Module from '../module'
-import Emitter from '../emitter'
-import utils from '../utils'
+import Module from "../module";
+import Emitter from "../emitter";
+import utils from "../utils";
 import smoothScroll from "smoothscroll";
 
 
 class ListModule extends Module {
   constructor(player, options) {
-    super(player, options)
-    this.options = options
+    super(player, options);
+    this.options = options;
 
     // 列表中歌曲信息
-    this.audios = []
-    this.playingAudio = null
+    this.audios = [];
+    this.playingAudio = null;
 
-    this.init()
-    console.log(`[module] ${ListModule.name} init`)
+    this.init();
+    console.log("[ListModule]", ListModule.name, "init");
   }
   static get name() {
-    return 'list'
+    return "list";
   }
 
   init() {
-    const list = document.createElement('ol');
-    list.classList.add('yuefu-list')
-    this.player.container.appendChild(list)
-    this.listNode = list
+    const list = document.createElement("ol");
+    list.classList.add("yuefu-list");
+    this.player.container.appendChild(list);
+    this.listNode = list;
 
     // 初始列表
-    this.audios = this.options.audios || []
+    this.audios = this.options.audios || [];
     this.bindEvent();
-    this.updateDom()
+    this.updateDom();
   }
 
   /**
@@ -38,7 +38,7 @@ class ListModule extends Module {
    * @memberof ListModule
    */
   bindEvent() {
-    this.listNode.addEventListener('click', (e) => {
+    this.listNode.addEventListener("click", (e) => {
       let target;
       if (e.target.tagName.toUpperCase() === "LI") {
         target = e.target;
@@ -54,7 +54,7 @@ class ListModule extends Module {
       else {
         this.player.toggle();
       }
-    })
+    });
   }
 
   switch (index) {
@@ -82,33 +82,33 @@ class ListModule extends Module {
   }
 
   add(audio) {
-    this.audios.push(audio)
-    this.updateDom()
+    this.audios.push(audio);
+    this.updateDom();
   }
   delete(index) {
-    this.audios.splice(index, 1)
-    this.updateDom()
+    this.audios.splice(index, 1);
+    this.updateDom();
   }
   updateDom() {
-    this.listNode.innerHTML = '';
+    this.listNode.innerHTML = "";
     const self = this;
     this.audios.forEach((audio, index) => {
-      const itemNode = document.createElement('li')
-      itemNode.classList.add('yuefu-list-item')
+      const itemNode = document.createElement("li");
+      itemNode.classList.add("yuefu-list-item");
       itemNode.innerHTML = `
         <span class="yuefu-list-cur" style="background-color: #444444;"></span>
         <span class="yuefu-list-index">${index+1}</span>
-        <span class="yuefu-list-title">${audio.name || '无名'}</span>
-        <span class="yuefu-list-author">${audio.artist || '未知'}</span>
-      `
-      const indexSpan = itemNode.querySelector('.yuefu-list-index')
-      const titleSpan = itemNode.querySelector('.yuefu-list-title')
-      const authorSpan = itemNode.querySelector('.yuefu-list-author')
+        <span class="yuefu-list-title">${audio.name || "无名"}</span>
+        <span class="yuefu-list-author">${audio.artist || "未知"}</span>
+      `;
+      const indexSpan = itemNode.querySelector(".yuefu-list-index");
+      const titleSpan = itemNode.querySelector(".yuefu-list-title");
+      const authorSpan = itemNode.querySelector(".yuefu-list-author");
 
-      self.listNode.appendChild(itemNode)
-    })
+      self.listNode.appendChild(itemNode);
+    });
   }
 
 }
 
-export default ListModule
+export default ListModule;
