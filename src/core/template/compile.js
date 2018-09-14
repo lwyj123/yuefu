@@ -31,13 +31,6 @@ function createElement(tag, data, childrens = []) {
 Compile.prototype = {
   node2Fragment: function() {
     var fragment = document.createDocumentFragment();
-    // let child = el.firstChild;
-
-    // // 将原生节点拷贝到fragment
-    // while (child) {
-    //   fragment.appendChild(child);
-    //   child = el.firstChild;
-    // }
 
     return fragment;
   },
@@ -82,7 +75,6 @@ Compile.prototype = {
 
     // v-if
     // if(ast.ifConditions) {
-    //   debugger;
     //   compileUtil.bindIf(node, this.$vm, ast.ifConditions[0].exp);
     // }
 
@@ -94,13 +86,24 @@ Compile.prototype = {
           const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
           node.addEventListener("click", fn.bind(self.$vm), false);
         }
+        // TODO: 做得通用，现在测试暂时写两个
+        if(event === "player-play") {
+          const exp = ast.events[event].value;
+          const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
+          self.$player.on("play", fn.bind(self.$vm));
+        }
+        if(event === "player-progress") {
+          const exp = ast.events[event].value;
+          const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
+          self.$player.on("progress", fn.bind(self.$vm));
+        }
       });
     }
     // text binding
     if(ast.type === 2) {
       ast.tokens.forEach((token) => {
         if(token["@binding"]) {
-          compileUtil.bind(this.$vm, token["@binding"]);
+          compileUtil.bindText(node, this.$vm, token["@binding"]);
         }
       });
     }
@@ -161,6 +164,15 @@ var compileUtil = {
     });
   },
 
+  bindText: function(node, vm, exp) {
+    function textUpdater(node, value, oldValue) {
+      node.nodeValue = value;
+    }
+    new Watcher(vm, exp, function(value, oldValue) {
+      textUpdater(node, value, oldValue);
+    });
+  },
+
   bindClass: function(node, vm, exp) {
     function classUpdater(node, value, oldValue) {
       let className = node.className;
@@ -178,19 +190,14 @@ var compileUtil = {
   //   // 这个注释节点就是用来占位的，好让我们记住原先的b-if指令DOM结构在哪儿
   //   let ref = document.createComment("yuefu-if");
   //   // node.parentNode.insertBefore(ref, node);
-  //   debugger;
   //   function ifUpdater(node, value, oldValue) {
-  //     debugger;
   //     if(value) {
-  //       debugger;
   //       node.parentNode.replaceChild(ref, node);
   //       ref = node;
   //     } else {
-  //       debugger;
   //       node.parentNode.replaceChild(ref, node);
   //       ref = node;
   //     }
-  //     debugger;
   //   }
 
   //   new Watcher(
@@ -199,11 +206,9 @@ var compileUtil = {
   //       const evaluation = new Function(`with(this) {
   //         return ${exp}
   //       }`);
-  //       debugger;
   //       return evaluation.call(vm, exp);
   //     },
   //     function(value, oldValue) {
-  //       debugger;
   //       ifUpdater(node, value, oldValue);
   //     });
 
@@ -224,16 +229,6 @@ var compileUtil = {
     });
     bindingCached[exp] = true;
 
-  },
-
-  // 事件处理
-  eventHandler: function(node, vm, exp, dir) {
-    var eventType = dir.split(":")[1],
-      fn = vm.$options.methods && vm.$options.methods[exp];
-
-    if (eventType && fn) {
-      node.addEventListener(eventType, fn.bind(vm), false);
-    }
   },
 
   _getVMVal: function(vm, exp) {
