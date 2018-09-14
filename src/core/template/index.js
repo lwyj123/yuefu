@@ -3,7 +3,8 @@ import MVVM from "./mvvm";
 import insertCss from "../../utils/insert-css";
 
 class Template {
-  constructor(element, template, model, options) {
+  constructor(element, template, player, model, options) {
+    this.player = player;
     this.template = template;
     this.options = options;
     this.model = model;
@@ -17,10 +18,13 @@ class Template {
     const mvvm = new MVVM({
       el: this.element,
       data: this.model.data,
+      mounted: this.model.mounted,
+      player: this.player,
       methods: this.model.methods,
       templateDescriptor: compiled
     });
 
+    // 插入template的css
     const style = insertCss(this.template.style);
   }
 }

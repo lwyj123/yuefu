@@ -32,6 +32,7 @@ export default {
         <div class="controller next-btn"></div>
         <div class="controller seek-next-btn"></div>
       </div>
+      {{ playingClass }}
     </div>
   `,
   style: `

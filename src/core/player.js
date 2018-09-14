@@ -64,12 +64,18 @@ class Player {
     wrapper.classList.add("wrapper");
     document.body.appendChild(wrapper);
 
-    this.template = new Template("div.wrapper",learningTemplate, {
+    this.template = new Template("div.wrapper",learningTemplate, this, {
       data: {
         title: "如何练就逻辑清晰的好口才",
         duration: "02:00",
         playState: "paused",
         playingClass: "pause"
+      },
+      mounted() {
+        debugger;
+        this.$player.on("progress", () => {
+          console.log("player progress");
+        });
       },
       methods: {
         togglePlayState: function() {
