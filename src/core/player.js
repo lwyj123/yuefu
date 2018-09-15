@@ -1,5 +1,5 @@
 import Emitter from "./emitter";
-import logger from "./logger";
+import { ConsoleLogger } from "./logger";
 import utils from "./utils";
 import { handleOption } from "./handleOption";
 // import Controller from "./controller";
@@ -17,12 +17,6 @@ import learningTemplate from "../templates/learning";
 const instances = [];
 
 class Player {
-  static debug(limit) {
-    if (limit === true) {
-      limit = "log";
-    }
-    logger.level(limit);
-  }
   constructor(options) {
     // merge设置
     this.options = handleOption(options);
@@ -32,6 +26,8 @@ class Player {
     this.modules = {};
     this.audio = null; // 当前播放的audio对象
     this.audioDOM = null; // audio dom对象
+
+    this.logger = new ConsoleLogger();
 
     this.randomOrder = utils.randomOrder(this.options.audio.length);
 
