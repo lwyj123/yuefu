@@ -10,7 +10,6 @@ function MVVM(options) {
   Object.keys(this.$options.methods).forEach(name => {
     this[name] = this.$options.methods[name];
   });
-  this.$player = options.player;
 
   // 数据代理
   // 实现 vm.xxx -> vm._data.xxx

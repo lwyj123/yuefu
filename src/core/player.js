@@ -68,6 +68,7 @@ class Player {
     wrapper.classList.add("wrapper");
     document.body.appendChild(wrapper);
 
+    const self = this;
     this.template = new Template("div.wrapper",learningTemplate, this, {
       data: {
         title: "如何练就逻辑清晰的好口才",
@@ -76,6 +77,7 @@ class Player {
         playingClass: "pause"
       },
       mounted() {
+        this.$player = self;
         this.$player.on("progress", () => {
           console.log("player progress");
         });
@@ -83,6 +85,11 @@ class Player {
       methods: {
         togglePlayState: function() {
           console.log("click toggle");
+          if(this.playState === "playing") {
+            this.$player.pause();
+          } else {
+            this.$player.play();
+          }
           this.playState = this.playState === "playing" ? "paused" : "playing";
           this.playingClass = this.playingClass === "play" ? "pause" : "play";
         },
@@ -93,8 +100,6 @@ class Player {
       }
     });
     this.template.render();
-    // this.controller = new Controller(this);
-    // this.list = new List(this);
 
     this.initAudio();
     this.bindEvents();

@@ -19,7 +19,6 @@ class Template {
       el: this.element,
       data: this.model.data,
       mounted: this.model.mounted,
-      player: this.player,
       methods: this.model.methods,
       templateDescriptor: compiled
     });

@@ -86,17 +86,6 @@ Compile.prototype = {
           const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
           node.addEventListener("click", fn.bind(self.$vm), false);
         }
-        // TODO: 做得通用，现在测试暂时写两个
-        if(event === "player-play") {
-          const exp = ast.events[event].value;
-          const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
-          self.$player.on("play", fn.bind(self.$vm));
-        }
-        if(event === "player-progress") {
-          const exp = ast.events[event].value;
-          const fn = self.$vm.$options.methods && self.$vm.$options.methods[exp];
-          self.$player.on("progress", fn.bind(self.$vm));
-        }
       });
     }
     // text binding
