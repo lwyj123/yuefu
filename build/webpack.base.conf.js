@@ -2,11 +2,10 @@
 const path = require("path");
 const webpack = require("webpack");
 const GitRevisionPlugin = require("git-revision-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
-
   mode: "development",
 
   devtool: "cheap-module-source-map",
@@ -28,7 +27,7 @@ module.exports = {
 
   resolve: {
     modules: ["node_modules"],
-    extensions: [".js", ".scss"]
+    extensions: [".js", ".ts", ".scss"]
   },
 
   module: {
@@ -38,7 +37,13 @@ module.exports = {
         test: /\.js$/,
         enforce: "pre",
         loader: "eslint-loader",
-        include: path.resolve(__dirname, "../src/js"),
+        include: path.resolve(__dirname, "../src/js")
+      },
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
       },
       {
         test: /\.js$/,
@@ -51,6 +56,10 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.tsx?$/,
+         loader: "awesome-typescript-loader"
       },
       {
         test: /\.scss$/,
@@ -80,7 +89,7 @@ module.exports = {
         test: /\.(png|jpg)$/,
         loader: "url-loader",
         options: {
-          "limit": 40000
+          limit: 40000
         }
       },
       {
@@ -114,13 +123,12 @@ module.exports = {
       GIT_HASH: JSON.stringify(gitRevisionPlugin.version())
     }),
     new MiniCssExtractPlugin({
-  　　 filename: "[name].css",
-  　　 chunkFilename: "[id].css"
-　　 })
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    })
   ],
 
   performance: {
     hints: false
   }
-
 };

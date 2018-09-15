@@ -1,7 +1,7 @@
 import Emitter from "./emitter";
 import logger from "./logger";
 import utils from "./utils";
-import handleOption from "./handlerOption";
+import { handleOption } from "./handleOption";
 // import Controller from "./controller";
 import ControllerModule from "./modules/ControllerModule";
 // import List from "./list";
