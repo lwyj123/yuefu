@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "webpack -p --colors --progress --config ./build/webpack.dev.conf.js --watch; rm dist/yuefu.core",
     "build": "webpack -p --colors --progress --config ./build/webpack-production.config.js --display-modules; rm dist/yuefu.core",
-    "build:ts": "",
+    "build:ts": "tsc -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

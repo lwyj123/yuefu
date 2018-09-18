@@ -23,10 +23,10 @@ abstract class Logger {
     this.showInfo = options.info;
     this.ns = options.ns;
   }
-  public abstract error(): void;
-  public abstract warn(): void;
-  public abstract log(): void;
-  public abstract info(): void;
+  public abstract error(...args: []): void;
+  public abstract warn(...args: []): void;
+  public abstract log(...args: []): void;
+  public abstract info(...args: []): void;
 }
 
 class ConsoleLogger extends Logger {
