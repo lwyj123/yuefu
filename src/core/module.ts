@@ -11,18 +11,19 @@ type YuefuPlayer = {
 
 };
 
-class Module {
+class BaseModule {
   public player: YuefuPlayer;
   public options: IModuleOptions;
   constructor(player: YuefuPlayer, options: IModuleOptions) {
     this.player = player;
     this.options = options;
   }
-  static get name() {
+  public static get Name(): string {
     return 'undefinedModule';
   }
 }
-Module.DEFAULTS = {};
-// Module.name = 'undefinedModule'
 
-export default Module;
+export {
+  BaseModule,
+  IModuleOptions,
+};

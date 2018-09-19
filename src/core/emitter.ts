@@ -55,22 +55,23 @@ enum ESource {
 }
 
 class Emitter extends eventemitter3.EventEmitter {
-  public logger: Logger = new ConsoleLogger({
-    error: true,
-    warn: true,
-    log: true,
-    info: true,
-    ns: 'emitter',
-  });
+  public logger: Logger;
   constructor() {
     super();
+    this.logger = new ConsoleLogger({
+      error: true,
+      warn: true,
+      log: true,
+      info: true,
+      ns: 'emitter',
+    });
     this.on('error', this.logger.error);
   }
 
-  public emit(event: string | symbol, ...args: []): boolean {
-    this.logger.log.apply(null, event, ...args);
+  public emit(event: string | symbol, ...args: any[]): boolean {
+    this.logger.log(event, ...args);
 
-    return super.emit.apply(this, event, ...args);
+    return super.emit(event, ...args);
   }
 }
 

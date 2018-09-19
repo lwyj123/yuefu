@@ -3,11 +3,12 @@
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-interface IYuefuOptions {
+export interface IYuefuOptions {
   container: Element;
   audio?: [];
   debug?: boolean;
   storageName?: string;
+  volume?: number;
 }
 
 function handleOption(options: IYuefuOptions): IYuefuOptions {
