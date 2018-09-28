@@ -4,7 +4,7 @@
  */
 
 import * as player from './player';
-import utils from './utils';
+// import * as utils from './utils';
 
 class Storage {
   public storageName: string;
@@ -12,7 +12,7 @@ class Storage {
   constructor (core: player.Player) {
     this.storageName = core.options.storageName;
 
-    this.data = JSON.parse(utils.storage.get(this.storageName));
+    this.data = JSON.parse(localStorage.getItem(this.storageName));
     if (!this.data) {
       this.data = {};
     }
@@ -25,7 +25,7 @@ class Storage {
 
   public setItem (key: string, value: any): void {
     this.data[key] = value;
-    utils.storage.set(this.storageName, JSON.stringify(this.data));
+    localStorage.setItem(this.storageName, JSON.stringify(this.data));
   }
 }
 

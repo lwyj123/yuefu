@@ -7,14 +7,14 @@ import * as emitter from './emitter';
 import { handleOption, IYuefuOptions } from './handleOption';
 import { ConsoleLogger, Logger } from './logger';
 // import Controller from "./controller";
-import ControllerModule from './modules/ControllerModule';
-import ListModule from './modules/ListModule';
-import LrcModule from './modules/LrcModule';
-import ProgressModule from './modules/ProgressModule';
+// import ControllerModule from './modules/ControllerModule';
+// import ListModule from './modules/ListModule';
+// import LrcModule from './modules/LrcModule';
+// import ProgressModule from './modules/ProgressModule';
 // import List from "./list";
 import * as storage from './storage';
 import template from './template';
-import utils from './utils';
+import * as utils from './utils';
 
 import learning from '../templates/learning';
 import * as module from './module';
@@ -24,7 +24,7 @@ const instances: Player[] = [];
 
 interface IAudioObject {
   url: string;
-  type: string;
+  type?: string;
 }
 
 class Player {
@@ -43,10 +43,10 @@ class Player {
 
   public static imports: {[key: string]: any} = {
     emitter: emitter.Emitter,
-    controller: ControllerModule,
-    progress: ProgressModule,
-    list: ListModule,
-    lrc: LrcModule,
+    // controller: ControllerModule,
+    // progress: ProgressModule,
+    // list: ListModule,
+    // lrc: LrcModule,
   };
   public options: IYuefuOptions;
   public container: Element;

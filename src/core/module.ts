@@ -1,3 +1,5 @@
+import { Player } from './player';
+
 /**
  * @file module base class
  * @author Yuyi Liang <liang.pearce@gmail.com>
@@ -7,14 +9,10 @@ type IModuleOptions = {
 
 };
 
-type YuefuPlayer = {
-
-};
-
 class BaseModule {
-  public player: YuefuPlayer;
+  public player: Player;
   public options: IModuleOptions;
-  constructor(player: YuefuPlayer, options: IModuleOptions) {
+  constructor(player: Player, options: IModuleOptions) {
     this.player = player;
     this.options = options;
   }

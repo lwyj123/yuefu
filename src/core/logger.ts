@@ -34,25 +34,25 @@ class ConsoleLogger extends Logger {
   constructor(options: ILoggerOptions) {
     super(options);
   }
-  public error(...args: []): void {
+  public error(...args: any[]): void {
     if (!this.showError) {
       return;
     }
     console.error(`[${this.ns}]`, ...args);
   }
-  public warn(...args: []): void {
+  public warn(...args: any[]): void {
     if (!this.showWarn) {
       return;
     }
     console.warn(`[${this.ns}]`, ...args);
   }
-  public log(...args: []): void {
+  public log(...args: any[]): void {
     if (!this.showLog) {
       return;
     }
     console.log(`[${this.ns}]`, ...args);
   }
-  public info(...args: []): void {
+  public info(...args: any[]): void {
     if (!this.showInfo) {
       return;
     }
