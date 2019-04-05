@@ -1,16 +1,23 @@
 module.exports = {
+    "parser": '@typescript-eslint/parser',
     "env": {
         "browser": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["plugin:@typescript-eslint/recommended"],
+    "plugins": [
+        "@typescript-eslint",
+    ],
     "parserOptions": {
-        "sourceType": "module"
+        "ecmaVersion": 2016,  // Allows for the parsing of modern ECMAScript features
+        "sourceType": 'module',  // Allows for the use of imports
+        "project": "./tsconfig.json",
     },
     "rules": {
+        "@typescript-eslint/rule-name": "error",
         "indent": [
             "error",
-            2
+            4
         ],
         "linebreak-style": [
             "error",

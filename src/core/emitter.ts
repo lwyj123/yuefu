@@ -54,10 +54,11 @@ enum ESource {
   USER   = 'user',
 }
 
-class Emitter extends eventemitter3.EventEmitter {
+class Emitter {
   public logger: Logger;
+  public emitter: any
   constructor() {
-    super();
+    this.emitter = new eventemitter3.EventEmitter()
     this.logger = new ConsoleLogger({
       error: true,
       warn: true,
@@ -68,10 +69,21 @@ class Emitter extends eventemitter3.EventEmitter {
     this.on('error', this.logger.error);
   }
 
+  public on(event: string | symbol, ...args: any[]) {
+    return this.emitter.on(event, ...args)
+  }
   public emit(event: string | symbol, ...args: any[]): boolean {
     this.logger.log(event, ...args);
 
-    return super.emit(event, ...args);
+    return this.emitter.emit(event, ...args);
+  }
+
+  public once(...args: any[]) {
+    this.emitter.once(...args)
+  }
+
+  public off(...args: any[]) {
+    this.emitter.off(...args)
   }
 }
 

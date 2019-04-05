@@ -4,7 +4,6 @@
  */
 
 import * as emitter from './emitter';
-import { handleOption, IYuefuOptions } from './handleOption';
 import { ConsoleLogger, Logger } from './logger';
 // import Controller from "./controller";
 // import ControllerModule from './modules/ControllerModule';
@@ -13,27 +12,42 @@ import { ConsoleLogger, Logger } from './logger';
 // import ProgressModule from './modules/ProgressModule';
 // import List from "./list";
 import * as storage from './storage';
-import template from './template';
-import * as utils from './utils';
+// import template from './template';
+// import * as utils from './utils';
 
-import learning from '../templates/learning';
+// import learning from '../templates/learning';
 import * as module from './module';
-
-// 多实例管理
-const instances: Player[] = [];
 
 interface IAudioObject {
   url: string;
   type?: string;
 }
 
+interface IYuefuConstructorOptions {
+  container?: Element;
+  audio?: IAudioObject[];
+  debug?: boolean;
+  storageName?: string;
+  volume?: number;
+}
+interface IYuefuOptions {
+  container: Element;
+  audio: IAudioObject[];
+  debug: boolean;
+  storageName: string;
+  volume: number;
+}
+
 class Player {
 
-  get currentAudio (): IAudioObject {
+  get currentAudio (): IAudioObject | null {
     return this.audio;
   }
 
   get duration (): number {
+    if (!this.audioDOM) {
+      return NaN;
+    }
     return isNaN(this.audioDOM.duration) ? 0 : this.audioDOM.duration;
   }
 
@@ -54,15 +68,21 @@ class Player {
   public modules: {
     [key: string]: module.BaseModule;
   };
-  public audio: IAudioObject;
-  public audioDOM: HTMLAudioElement;
+  public audio: IAudioObject | null;
+  public audioDOM: HTMLAudioElement | null;
   public logger: Logger;
   public emitter: emitter.Emitter;
   public storage: storage.Storage;
 
-  constructor(options: IYuefuOptions) {
+  constructor(options: IYuefuConstructorOptions) {
     // merge设置
-    this.options = handleOption(options);
+    this.options = {
+      audio: options.audio || [],
+      volume: options.volume || 100,
+      container: options.container || document.getElementsByClassName('yuefu')[0],
+      debug: options.debug || false,
+      storageName: options.storageName || 'yuefu-setting',
+    }
     this.container = this.options.container;
     this.paused = true;
     this.modules = {};
@@ -130,8 +150,6 @@ class Player {
 
     this.initAudio();
     this.bindEvents();
-
-    instances.push(this);
   }
 
   /**
@@ -146,11 +164,11 @@ class Player {
     // this.audioDOM.preload = this.options.preload;
 
     Object.keys(emitter.EAudioEvents).forEach((eventSymbol: string | symbol) => {
-      this.audioDOM.addEventListener(emitter.EAudioEvents[eventSymbol], (e: Event) => {
+      this.audioDOM!.addEventListener(emitter.EAudioEvents[eventSymbol as any], (e: Event) => {
         if (this.options.debug) {
-          console.log('[core]', 'event:', emitter.EAudioEvents[eventSymbol], e);
+          console.log('[core]', 'event:', emitter.EAudioEvents[eventSymbol as any], e);
         }
-        this.emitter.emit(emitter.EAudioEvents[eventSymbol], e);
+        this.emitter.emit(emitter.EAudioEvents[eventSymbol as any], e);
       });
     });
   }
@@ -216,7 +234,10 @@ class Player {
   }
   public setAudio (audio: IAudioObject): void {
     this.audio = audio;
-    let type: string = audio.type;
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when setAudio")
+    }
+    let type: string | undefined = audio.type;
     if (!type || type === 'auto') {
         type = 'normal';
     } else if (type === 'normal') {
@@ -231,6 +252,9 @@ class Player {
   }
 
   public seek (time: number): void {
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when seek")
+    }
     let targetTime: number = time;
     targetTime = Math.max(time, 0);
     targetTime = Math.min(time, this.duration);
@@ -238,18 +262,26 @@ class Player {
     this.audioDOM.currentTime = targetTime;
   }
   public seekNextSecond(second: number): void {
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when seekNextSecond")
+    }
     const currentTime: number = this.audioDOM.currentTime;
     const targetTime: number = currentTime + second;
     this.seek(targetTime);
   }
   public seekPrevSecond(second: number): void {
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when seekPrevSecond")
+    }
     const currentTime: number = this.audioDOM.currentTime;
     const targetTime: number = currentTime - second;
     this.seek(targetTime);
   }
 
   public play (): void {
-
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when play")
+    }
     const playPromise: Promise<any> = this.audioDOM.play();
     if (playPromise) {
       playPromise.catch((e: Error) => {
@@ -259,6 +291,9 @@ class Player {
   }
 
   public pause (): void {
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when pause")
+    }
     this.audioDOM.pause();
   }
 
@@ -266,6 +301,9 @@ class Player {
    * Set volume
    */
   public volume (percentage: number | string, nostorage: boolean): number {
+    if (!this.audioDOM) {
+      throw new Error("no audioDOM when setVolume")
+    }
     let percentageFormated: number = parseFloat(percentage.toString());
     if (!isNaN(percentageFormated)) {
       percentageFormated = Math.max(percentageFormated, 0);
@@ -287,16 +325,19 @@ class Player {
   /**
    * bind events
    */
-  public on (event: string | symbol, fn: (...args: any[]) => void, context?: any): void {
-    return this.emitter.on.apply(this.emitter, arguments);
+  public on (event: string | symbol, fn: (...args: any[]) => void, context?: any): this {
+    this.emitter.on(event, fn);
+    return this
   }
 
-  public once(event: string | symbol, fn: (...args: any[]) => void, context?: any): void {
-    return this.emitter.once.apply(this.emitter, arguments);
+  public once(event: string | symbol, fn: (...args: any[]) => void, context?: any): this {
+    this.emitter.once(event, fn);
+    return this
   }
 
-  public off(event: string | symbol, fn: (...args: any[]) => void, context?: any): void {
-    return this.emitter.off.apply(this.emitter, arguments);
+  public off(event: string | symbol, fn: (...args: any[]) => void, context?: any): this {
+    this.emitter.off(event, fn);
+    return this
   }
 
   /**
@@ -314,10 +355,11 @@ class Player {
    * destroy this player
    */
   public destroy (): void {
-    instances.splice(instances.indexOf(this), 1);
     this.pause();
     this.container.innerHTML = '';
-    this.audioDOM.src = '';
+    if(this.audioDOM) {
+      this.audioDOM.src = '';
+    }
     this.emitter.emit(emitter.EPlayerEvents.DESTORY);
   }
 

@@ -3,7 +3,7 @@
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-import * as player from './player';
+import * as player from './yuefu';
 // import * as utils from './utils';
 
 class Storage {
@@ -12,7 +12,7 @@ class Storage {
   constructor (core: player.Player) {
     this.storageName = core.options.storageName;
 
-    this.data = JSON.parse(localStorage.getItem(this.storageName));
+    this.data = JSON.parse(localStorage.getItem(this.storageName) || "{}");
     if (!this.data) {
       this.data = {};
     }

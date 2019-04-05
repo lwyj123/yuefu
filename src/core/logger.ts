@@ -21,7 +21,7 @@ abstract class Logger {
     this.showWarn = options.warn;
     this.showLog = options.log;
     this.showInfo = options.info;
-    this.ns = options.ns;
+    this.ns = options.ns || "yuefu";
   }
 
   public abstract error(...args: any[]): void;
