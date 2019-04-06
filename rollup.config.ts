@@ -38,7 +38,7 @@ export default [{
         sourceMaps(),
     ],
 }, {
-    input: `src/core/${libraryName}.ts`,
+    input: "src/index.ts",
     output: {
         file: pkg.module,
         format: "es",
