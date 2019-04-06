@@ -5,7 +5,7 @@
  */
 
 const containers: HTMLElement[] = []; // will store container HTMLElement references
-const styleElements: HTMLStyleElement[] = []; // will store {prepend: HTMLElement, append: HTMLElement}
+const styleElements: (HTMLStyleElement | null)[] = []; // will store {prepend: HTMLElement, append: HTMLElement}
 
 type IInsertCSSOptions = {
   prepend?: boolean;
@@ -14,7 +14,7 @@ type IInsertCSSOptions = {
 
 function insertCss(css: string, options: IInsertCSSOptions = {}): HTMLStyleElement {
   const position: string = options.prepend === true ? 'prepend' : 'append';
-  const container: HTMLElement = options.container !== undefined ? options.container : document.querySelector('head');
+  const container: HTMLElement = options.container !== undefined ? options.container : document.querySelector('head') as HTMLElement;
 
   let containerId: number = containers.indexOf(container);
 
@@ -27,10 +27,10 @@ function insertCss(css: string, options: IInsertCSSOptions = {}): HTMLStyleEleme
   // try to get the correponding container + position styleElement, create it otherwise
   let styleElement: HTMLStyleElement;
 
-  if (styleElements[containerId] !== undefined && styleElements[containerId][position] !== undefined) {
-    styleElement = styleElements[containerId][position];
+  if (styleElements[containerId] !== undefined && (styleElements[containerId] as any)[position] !== undefined) {
+    styleElement = (styleElements[containerId] as any)[position];
   } else {
-    styleElement = styleElements[containerId][position] = createStyleElement();
+    styleElement = (styleElements[containerId] as any)[position] = createStyleElement();
 
     if (position === 'prepend') {
       container.insertBefore(styleElement, container.childNodes[0]);
