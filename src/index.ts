@@ -4,14 +4,13 @@
  */
 
 import { Player, IAudioObject } from './core/yuefu';
-import { BaseModule, IModuleOptions } from './core/module';
 
+export * from './core/module';
+export * from './core/emitter';
 // tslint:disable-next-line:prefer-type-cast
 export {
     Player,
     IAudioObject,
-    BaseModule,
-    IModuleOptions,
 };
 
 export default Player
