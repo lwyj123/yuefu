@@ -1,10 +1,10 @@
 {
   "name": "yuefu",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A programable music player built for compatibility and extensibility.",
   "main": "dist/yuefu.umd.js",
   "module": "dist/yuefu.es5.js",
-  "types": "dist/",
+  "types": "dist/types/index.d.ts",
   "directories": {
     "lib": "lib"
   },

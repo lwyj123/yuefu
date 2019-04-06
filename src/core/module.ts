@@ -1,11 +1,11 @@
-import { Player } from './player';
+import { Player } from './yuefu';
 
 /**
  * @file module base class
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-type IModuleOptions = {
+interface IModuleOptions {
 
 };
 

@@ -3,20 +3,33 @@
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-import emitter from '../emitter';
-import module from '../module';
+// import emitter from '../emitter';
+import { BaseModule, IModuleOptions } from '../module';
+import { Player, IAudioObject } from '../yuefu';
+import { Emitter, EPlayerEvents, EAudioEvents } from '../emitter';
 
 export const EVENTS = {
   LRC_LOADED: 'lrc:lrc-loaded',
 };
 
-class LrcModule extends Module {
-  constructor(player, options) {
+class LrcModule extends BaseModule {
+  public parsed: any[] | null
+  public index: number;
+  public lrcDom: HTMLOListElement;
+  public lrcContentsNode: HTMLDivElement;
+  constructor(player: Player, options: IModuleOptions) {
     super(player, options);
     this.options = options;
 
     this.parsed = null;
     this.index = 0;
+
+    this.lrcDom = document.createElement('ol');
+    this.lrcDom.classList.add('yuefu-lrc');
+    this.lrcDom.innerHTML = `
+      <div class="yuefu-lrc-contents"></div>
+    `;
+    this.lrcContentsNode = this.lrcDom.querySelector('.yuefu-lrc-contents') as HTMLDivElement;
 
     this.init();
     console.log('[LrcModule]', LrcModule.name, 'init');
@@ -26,30 +39,27 @@ class LrcModule extends Module {
   }
 
   public init() {
-    const lrcNode = document.createElement('ol');
-    lrcNode.classList.add('yuefu-lrc');
-    lrcNode.innerHTML = `
-      <div class="yuefu-lrc-contents"></div>
-    `;
-    this.player.container.appendChild(lrcNode);
-    this.lrcNode = lrcNode;
-    this.lrcContentsNode = lrcNode.querySelector('.yuefu-lrc-contents');
+
+    this.player.container.appendChild(this.lrcDom);
 
     // 监听audio变化事件，加载切换后的歌词
-    this.player.emitter.on(Emitter.playerEvents.AUDIO_SWITCH, (index, audio) => {
+    this.player.emitter.on(EPlayerEvents.AUDIO_SWITCH, (index: number, audio: IAudioObject) => {
       this.switch(audio.lrc);
     });
     this.switch(this.player.currentAudio && this.player.currentAudio.lrc);
 
     const self = this;
-    this.player.on(Emitter.audioEvents.TIME_UPDATE, () => {
+    this.player.on(EAudioEvents.TIME_UPDATE, () => {
       if (!self.player.disableTimeupdate) {
         this.parsed && this.update();
       }
     });
   }
 
-  public update (currentTime = this.player.audioDOM.currentTime) {
+  public update (currentTime = this.player.audioDOM!.currentTime) {
+    if(!this.parsed) {
+      throw new Error("parsed is null when update")
+    }
     if (this.index > this.parsed.length - 1 || currentTime < this.parsed[this.index][0] || (!this.parsed[this.index + 1] || currentTime >= this.parsed[this.index + 1][0])) {
       for (let i = 0; i < this.parsed.length; i++) {
         if (currentTime >= this.parsed[i][0] && (!this.parsed[i + 1] || currentTime < this.parsed[i + 1][0])) {
@@ -64,13 +74,16 @@ class LrcModule extends Module {
     }
   }
 
-  public switch (lrcUrl) {
+  public switch (lrcUrl: string) {
+    if (!this.player.currentAudio) {
+      this.player.logger.warn("currentAudio is null")
+    }
     if (lrcUrl) {
       this.parsed = [['00:00', 'Loading']];
       const xhr = new XMLHttpRequest();
       const self = this;
       xhr.onreadystatechange = () => {
-        if (lrcUrl === self.player.currentAudio.lrc && xhr.readyState === 4) {
+        if (lrcUrl === self.player.currentAudio!.lrc && xhr.readyState === 4) {
           if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
             self.parsed = self.parse(xhr.responseText);
           } else {
@@ -107,7 +120,7 @@ class LrcModule extends Module {
      *
      * @return {String} [[time, text], [time, text], [time, text], ...]
      */
-  public parse (lrc_s) {
+  public parse (lrc_s: string) {
     if (lrc_s) {
       lrc_s = lrc_s.replace(/([^\]^\n])\[/g, (match, p1) => p1 + '\n[');
       const lyric = lrc_s.split('\n');
@@ -123,7 +136,7 @@ class LrcModule extends Module {
           // handle multiple time tag
           const timeLen = lrcTimes.length;
           for (let j = 0; j < timeLen; j++) {
-            const oneTime = /\[(\d{2}):(\d{2})(\.(\d{2,3}))?]/.exec(lrcTimes[j]);
+            const oneTime = /\[(\d{2}):(\d{2})(\.(\d{2,3}))?]/.exec(lrcTimes[j]) as any;
             const min2sec = oneTime[1] * 60;
             const sec2sec = parseInt(oneTime[2]);
             const msec2sec = oneTime[4] ? parseInt(oneTime[4]) / ((oneTime[4] + '').length === 2 ? 100 : 1000) : 0;
@@ -134,7 +147,7 @@ class LrcModule extends Module {
       }
       // sort by time
       lrc = lrc.filter((item) => item[1]);
-      lrc.sort((a, b) => a[0] - b[0]);
+      lrc.sort((a: any, b: any) => a[0] - b[0]);
       return lrc;
     } else {
       return [];

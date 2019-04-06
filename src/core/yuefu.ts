@@ -6,10 +6,10 @@
 import * as emitter from './emitter';
 import { ConsoleLogger, Logger } from './logger';
 // import Controller from "./controller";
-// import ControllerModule from './modules/ControllerModule';
-// import ListModule from './modules/ListModule';
-// import LrcModule from './modules/LrcModule';
-// import ProgressModule from './modules/ProgressModule';
+import ControllerModule from './modules/ControllerModule';
+import ListModule from './modules/ListModule';
+import LrcModule from './modules/LrcModule';
+import ProgressModule from './modules/ProgressModule';
 // import List from "./list";
 import * as storage from './storage';
 // import template from './template';
@@ -20,7 +20,10 @@ import * as module from './module';
 
 interface IAudioObject {
   url: string;
+  name?: string;
+  artist?: string;
   type?: string;
+  lrc? : any;
 }
 
 interface IYuefuConstructorOptions {
@@ -39,7 +42,7 @@ interface IYuefuOptions {
 }
 
 class Player {
-
+  disableTimeupdate: boolean = false;
   get currentAudio (): IAudioObject | null {
     return this.audio;
   }
@@ -57,10 +60,10 @@ class Player {
 
   public static imports: {[key: string]: any} = {
     emitter: emitter.Emitter,
-    // controller: ControllerModule,
-    // progress: ProgressModule,
-    // list: ListModule,
-    // lrc: LrcModule,
+    controller: ControllerModule,
+    progress: ProgressModule,
+    list: ListModule,
+    lrc: LrcModule,
   };
   public options: IYuefuOptions;
   public container: Element;
@@ -109,44 +112,6 @@ class Player {
 
     this.emitter = new emitter.Emitter();
     this.storage = new storage.Storage(this);
-
-    // 插入wrapper
-    const wrapper: HTMLDivElement = document.createElement('div');
-    wrapper.classList.add('wrapper');
-    document.body.appendChild(wrapper);
-
-    // const self = this;
-    // this.template = new Template('div.wrapper', learningTemplate, this, {
-    //   data: {
-    //     title: '如何练就逻辑清晰的好口才',
-    //     duration: '02:00',
-    //     playState: 'paused',
-    //     playingClass: 'pause',
-    //   },
-    //   mounted() {
-    //     this.$player = self;
-    //     this.$player.on('progress', () => {
-    //       console.log('player progress');
-    //     });
-    //   },
-    //   methods: {
-    //     togglePlayState: function() {
-    //       console.log('click toggle');
-    //       if (this.playState === 'playing') {
-    //         this.$player.pause();
-    //       } else {
-    //         this.$player.play();
-    //       }
-    //       this.playState = this.playState === 'playing' ? 'paused' : 'playing';
-    //       this.playingClass = this.playingClass === 'play' ? 'pause' : 'play';
-    //     },
-    //   },
-    // },                           {
-    //   test (node, directiveMeta) {
-
-    //   },
-    // });
-    // this.template.render();
 
     this.initAudio();
     this.bindEvents();

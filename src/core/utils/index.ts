@@ -4,7 +4,7 @@
  */
 export const isMobile: boolean = /mobile/i.test(window.navigator.userAgent);
 
-export function secondToTime (second: number): string {
+export function secondToTime(second: number): string {
   const hour: number = Math.floor(second / 3600);
   const min: number = Math.floor((second - hour * 3600) / 60);
   const sec: number = Math.floor(second - hour * 3600 - min * 60);
@@ -18,32 +18,38 @@ export function timeToSecond(time: string): number {
   return (min * 60) + sec;
 }
 
-// getElementViewLeft: (element) => {
-//     let actualLeft = element.offsetLeft;
-//     let current = element.offsetParent;
-//     const elementScrollLeft = document.body.scrollLeft + document.documentElement.scrollLeft;
-//     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-//       while (current !== null) {
-//         actualLeft += current.offsetLeft;
-//         current = current.offsetParent;
-//       }
-//     } else {
-//       while (current !== null && current !== element) {
-//         actualLeft += current.offsetLeft;
-//         current = current.offsetParent;
-//       }
-//     }
-//     return actualLeft - elementScrollLeft;
-//   },
+export function getElementViewLeft(element: HTMLElement) {
+  let actualLeft = element.offsetLeft;
+  let current = element.offsetParent as HTMLElement;
+  const elementScrollLeft = document.body.scrollLeft + document.documentElement.scrollLeft;
+  if (!(document as any).fullscreenElement && !(document as any).mozFullScreenElement && !(document as any).webkitFullscreenElement) {
+    while (current !== null) {
+      actualLeft += current.offsetLeft;
+      current = current.offsetParent as HTMLElement;
+    }
+  } else {
+    while (current !== null && current !== element) {
+      actualLeft += current.offsetLeft;
+      current = current.offsetParent as HTMLElement;
+    }
+  }
+  return actualLeft - elementScrollLeft;
+}
 
-//   getElementViewTop; : (element, noScrollTop); => {
-//     let actualTop = element.offsetTop;
-//     let current = element.offsetParent;
-//     let elementScrollTop = 0;
-//     while (current !== null) {
-//       actualTop += current.offsetTop;
-//       current = current.offsetParent;
-//     }
-//     elementScrollTop = document.body.scrollTop + document.documentElement.scrollTop;
-//     return noScrollTop ? actualTop : actualTop - elementScrollTop;
-//   },
+export function getElementViewTop(element: HTMLElement, noScrollTop: boolean) {
+  let actualTop = element.offsetTop;
+  let current = element.offsetParent as HTMLElement;
+  let elementScrollTop = 0;
+  while (current !== null) {
+    actualTop += current.offsetTop;
+    current = current.offsetParent as HTMLElement;
+  }
+  elementScrollTop = document.body.scrollTop + document.documentElement.scrollTop;
+  return noScrollTop ? actualTop : actualTop - elementScrollTop;
+}
+
+export const eventNameMap = {
+  dragStart: isMobile ? "touchstart" : "mousedown",
+  dragMove: isMobile ? "touchmove" : "mousemove",
+  dragEnd: isMobile ? "touchend" : "mouseup"
+}

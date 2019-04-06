@@ -3,18 +3,18 @@
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-import smoothscroll from 'smoothscroll';
+// import smoothscroll from 'smoothscroll';
 import * as emitter from '../emitter';
 import * as module from '../module';
-import { IAudioObject, Player } from '../player';
-import utils from '../utils';
+import { IAudioObject, Player } from '../yuefu';
+// import utils from '../utils';
 
 interface IListModuleOptions extends module.IModuleOptions {
-  [key: string]: string;
+  [key: string]: any;
 }
 class ListModule extends module.BaseModule {
   public audios: IAudioObject[];
-  public playingAudio: IAudioObject;
+  public playingAudio: IAudioObject | null;
   public listNode: HTMLDListElement;
   public options: IListModuleOptions;
   public index: number;
@@ -25,6 +25,9 @@ class ListModule extends module.BaseModule {
     // 列表中歌曲信息
     this.audios = [];
     this.playingAudio = null;
+    this.index = 0
+    this.listNode = document.createElement('ol');
+    this.listNode.classList.add('yuefu-list');
 
     this.init();
     console.log('[ListModule]', ListModule.name, 'init');
@@ -34,10 +37,7 @@ class ListModule extends module.BaseModule {
   }
 
   public init(): void {
-    const list: HTMLOListElement  = document.createElement('ol');
-    list.classList.add('yuefu-list');
-    this.player.container.appendChild(list);
-    this.listNode = list;
+    this.player.container.appendChild(this.listNode);
 
     // 初始列表
     this.audios = this.options.audios || [];
@@ -51,14 +51,14 @@ class ListModule extends module.BaseModule {
    * @memberof ListModule
    */
   public bindEvent() {
-    this.listNode.addEventListener('click', (e) => {
-      let target;
-      if (e.target.tagName.toUpperCase() === 'LI') {
-        target = e.target;
+    this.listNode.addEventListener('click', (e: MouseEvent) => {
+      let target: Element;
+      if ((e.target as Element).tagName.toUpperCase() === 'LI') {
+        target = e.target as Element;
       } else {
-        target = e.target.parentElement;
+        target = (e.target as Element).parentElement as Element;
       }
-      const audioIndex = parseInt(target.querySelector('.yuefu-list-index').innerHTML) - 1;
+      const audioIndex = parseInt(target.querySelector('.yuefu-list-index')!.innerHTML) - 1;
       if (audioIndex !== this.index) {
         this.switch(audioIndex);
         this.player.play();
@@ -68,10 +68,11 @@ class ListModule extends module.BaseModule {
     });
   }
 
-  public switch (index) {
-    this.player.emitter.emit(emitter.EPlayerEvents.AUDIO_SWITCH,
-                             index,
-                             this.audios[index]
+  public switch (index: number) {
+    this.player.emitter.emit(
+      emitter.EPlayerEvents.AUDIO_SWITCH,
+      index,
+      this.audios[index]
     );
     if (index === undefined || !this.audios[index]) {
       throw new Error('index undefined');
@@ -83,18 +84,18 @@ class ListModule extends module.BaseModule {
 
     const light = this.player.container.querySelector('.yuefu-list-light');
     if (light) {
-        light.classList.remove('yuefu-list-light');
-      }
+      light.classList.remove('yuefu-list-light');
+    }
 
     this.player.container.querySelectorAll('.yuefu-list li')[this.index].classList.add('yuefu-list-light');
 
-      // smoothScroll(this.index * 33, 500, null, this.listNode);
+    // smoothScroll(this.index * 33, 500, null, this.listNode);
 
     this.player.setAudio(audio);
 
   }
 
-  public add(audio): void {
+  public add(audio: IAudioObject): void {
     this.audios.push(audio);
     this.updateDom();
   }

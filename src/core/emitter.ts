@@ -3,7 +3,7 @@
  * @author Yuyi Liang <liang.pearce@gmail.com>
  */
 
-import * as eventemitter3 from 'eventemitter3';
+import eventemitter3 from 'eventemitter3';
 import { ConsoleLogger, Logger } from './logger';
 
 enum EAudioEvents {
